@@ -52,11 +52,19 @@ function NavBar({}) {
   });
 
   const handleLogout = () => {
-    setIsLoggedIn(false);
-    setLoggedInUsername('');
-    setLoginError('');
-    formik.resetForm();
-    setIsDropdownOpen(false); 
+    fetch('/logout', {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((r) => r.json())
+      .then(() => {
+        setIsLoggedIn(false);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   return (

@@ -231,9 +231,10 @@ class Signup(Resource):
 api.add_resource(Signup, "/signup")
 
 
+
 class Login(Resource):
     def post(self):
-        data = request.get_json()
+        data = request.get_json()  
         username = data['username']
         password = data['password']
        
@@ -242,15 +243,33 @@ class Login(Resource):
         if user and user.authenticate(password):
             session['user_id'] = user.id
             user_dict = user.to_dict()
-            return make_response(
-                {'message':f'Welcome Back {username}!'},
-                user_dict, 
-                200)
+            response = make_response(
+                {'message': 'Login successful', 'user': user_dict}, 200
+            )
+            return response
         
-        return make_response({'error': 'Invalid username or password'}, 401)
+        else:
+            response = make_response(
+                {'error': 'Invalid username or password'}, 401
+            )
+            return response
+               
+api.add_resource(Login, '/login')
 
 
-api.add_resource(Login, "/login")
+    
+class Logout(Resource):
+    def delete(self):
+        session['user_id'] = None
+        response  = make_response({'message': 'Logged out successfully'},200 )
+        return response
+
+api.add_resource(Logout, '/logout')
+
+
+
+
+
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
