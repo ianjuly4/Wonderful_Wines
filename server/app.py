@@ -235,7 +235,10 @@ class Login(Resource):
         if user and user.authenticate(password):
             session['user_id'] = user.id
             user_dict = user.to_dict()
-            return make_response(user_dict, 200)
+            return make_response(
+                {'message':f'Welcome Back {username}!'},
+                user_dict, 
+                200)
         
         return make_response({'error': 'Invalid username or password'}, 401)
 
