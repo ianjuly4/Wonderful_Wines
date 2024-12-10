@@ -4,6 +4,7 @@ from sqlalchemy.exc import IntegrityError
 from config import app, db, Api, CORS, Migrate
 from models import Wine, Review, User
 
+app.secret_key = "b'\x1f\r\xa4\xfa\x1f\x17\xf6?\r\x90@\xb0\x1d\x0c\xbb\xc2'"
 
 CORS(app, origins='http://localhost:3000')
 migrate = Migrate(app, db)
@@ -219,7 +220,27 @@ class Signup(Resource):
         new_user_dict = new_user.to_dict()
 
         return make_response(new_user_dict, 201)
+    
 api.add_resource(Signup, "/signup")
+
+
+class Login(Resource):
+    def post(self):
+        data = request.get_json()
+        username = data['username']
+        password = data['password']
+       
+        user = User.query.filter_by(username=username).first()  
+        
+        if user and user.authenticate(password):
+            session['user_id'] = user.id
+            user_dict = user.to_dict()
+            return make_response(user_dict, 200)
+        
+        return make_response({'error': 'Invalid username or password'}, 401)
+
+
+api.add_resource(Login, "/login")
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
