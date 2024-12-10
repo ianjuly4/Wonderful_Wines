@@ -5,7 +5,7 @@ from config import app, db, Api, CORS, Migrate
 from models import Wine, Review, User
 
 
-CORS(app, origins='http://localhost:4000')
+CORS(app, origins='http://localhost:3000')
 migrate = Migrate(app, db)
 api = Api(app)
 
@@ -189,6 +189,37 @@ class ReviewsById(Resource):
         return response
     
 api.add_resource(ReviewsById, "/reviews/<int:id>" )
+
+class Signup(Resource):
+    def post(self):
+        data = request.get_json()
+        print(data)
+        if not data:
+            return make_response({"message": "Invalid JSON. No data provided."}, 400)
+        
+        username = data.get('username')
+        password = data.get('password')
+       
+        if not username or not password:
+            return make_response({"message": "Username and password are required."}, 422)
+        
+        user = User.query.filter(User.username == username).first()
+        if user:
+            return make_response({"message": "Username already taken."}, 422)
+
+        new_user = User(
+            username=username,
+        )
+        new_user.password_hash = password  
+
+        db.session.add(new_user)
+        db.session.commit()
+
+        
+        new_user_dict = new_user.to_dict()
+
+        return make_response(new_user_dict, 201)
+api.add_resource(Signup, "/signup")
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
