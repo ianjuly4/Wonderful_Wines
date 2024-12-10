@@ -1,59 +1,70 @@
-import React from "react";
+import React, { useState } from "react";
 import * as yup from "yup";
 import { useFormik } from "formik";
 
-function AddForm({displayStarRating}){
-    const formik = useFormik({
-        initialValues: {
-          name: "",
-          type: "",
-          location: "",
-          flavorProfile: "",
-          price: "",
-          image: "",
-          rating: "",
-        },
-        validationSchema: yup.object().shape({
-          name: yup.string().required("Must enter a wine name"),
-          type: yup.string().required("Must enter a wine type"),
-          location: yup.string().required("Must enter a location"),
-          flavorProfile: yup.string().required("Must enter a flavor profile"),
-          price: yup
-            .number()
-            .positive()
-            .integer()
-            .required("Must enter a price")
-            .typeError("Please enter an Integer")
-            .max(200),
-          image: yup.string().max(200),
-          rating: yup
-            .number()
-            .positive()
-            .integer()
-            .required("Must enter a wine rating")
-            .typeError("please enter an integer")
-            .max(5),
-        }),
-        onSubmit: (values) => {
-          fetch("wines", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(values),
-          })
-            .then((r) => r.json())
-            .then((newWine) => {
-              console.log("Submitted:", newWine);
-            })
-            .catch((error) => console.error("Error:", error));
-            formik.resetForm()
-        },
-      });
+function AddForm({ displayStarRating }) {
+  const [message, setMessage] = useState("");  
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      type: "",
+      location: "",
+      flavorProfile: "",
+      price: "",
+      image: "",
+      rating: "",
+    },
+    validationSchema: yup.object().shape({
+      name: yup.string().required("Must enter a wine name"),
+      type: yup.string().required("Must enter a wine type"),
+      location: yup.string().required("Must enter a location"),
+      flavorProfile: yup.string().required("Must enter a flavor profile"),
+      price: yup
+        .number()
+        .positive()
+        .integer()
+        .required("Must enter a price")
+        .typeError("Please enter an Integer")
+        .max(200),
+      image: yup.string().max(200),
+      rating: yup
+        .number()
+        .positive()
+        .integer()
+        .required("Must enter a wine rating")
+        .typeError("please enter an integer")
+        .max(5),
+    }),
+    onSubmit: async (values) => {
+      try {
+        const response = await fetch("/wines", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(values),
+        });
+
+        const result = await response.json();
+        
+        if (response.ok) {
+          setMessage("Wine added successfully!");
+        } else {
+          setMessage(result.message || "An error occurred, please try again.");
+        }
+
+      } catch (error) {
+       
+        setMessage("An unexpected error occurred.");
+      }
+      formik.resetForm();
+    },
+  });
     
 
     return(
         <div className="p-4 rounded shadow-lg flex flex-col gap-4">
+          {message && <div className="message">{message}</div>}
         <div className="flex gap-8">
             <div className="flex-1 w-[40%]">
             <input

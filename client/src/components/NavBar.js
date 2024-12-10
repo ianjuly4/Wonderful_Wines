@@ -7,9 +7,10 @@ function NavBar({}) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);  
   const [loggedInUsername, setLoggedInUsername] = useState(''); 
+  const [loginError, setLoginError] = useState(''); 
 
   const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
+    setIsDropdownOpen(!isDropdownOpen); 
   };
 
   const formik = useFormik({
@@ -25,7 +26,6 @@ function NavBar({}) {
         .max(25)
     }),
     onSubmit: (values) => {
-  
       fetch("login", {
         method: "POST",
         headers: {
@@ -37,36 +37,50 @@ function NavBar({}) {
         .then((response) => {
           if (response.message) {
             setIsLoggedIn(true);  
-            setLoggedInUsername(values.username);  
-
+            setLoggedInUsername(values.username);
+            setLoginError(''); 
+            setIsDropdownOpen(false); 
+          } else if (response.error) {
+            setLoginError(response.error);
           }
         })
         .catch((error) => {
           console.error("Error:", error);
-          formik.resetForm();
+          setLoginError('An error occurred, please try again.');
         });
     },
   });
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setLoggedInUsername('');
+    setLoginError('');
+    formik.resetForm();
+    setIsDropdownOpen(false); 
+  };
 
   return (
     <div className="w-full bg-gradient-to-r from-red-400 to-white flex justify-center items-center h-16">
       <nav className="flex space-x-4">
         
-        {/* Login Dropdown */}
+        {/* Login/Logout Dropdown */}
         <div className="relative">
+  
           <button
             onClick={toggleDropdown}
             className="text-5xl text-white font-semibold hover:text-black transition-all"
           >
-            {isLoggedIn ? `Welcome Back, ${loggedInUsername}!` : 'Login'}
+            {isLoggedIn ? 'Logout' : 'Login'}
           </button>
-          
-          {isDropdownOpen && !isLoggedIn && (
-            <div className="absolute left-0 mt-2 bg-white shadow-lg rounded-md w-72 p-4">
+
+          {/* Login Form Dropdown */}
+          {!isLoggedIn && isDropdownOpen && (
+            <div className="absolute left-0 mt-2 bg-white shadow-lg rounded-md w-72 p-4 z-50">
               <form onSubmit={formik.handleSubmit} className="space-y-4">
-                
                 {/* Username Input */}
                 <div>
+                   {/* Display login error message */}
+                  {loginError && <div className="text-red-500 text-sm">{loginError}</div>}
                   <label htmlFor="username" className="block text-lg font-semibold">
                     Username
                   </label>
@@ -118,18 +132,11 @@ function NavBar({}) {
             </div>
           )}
 
-          {/* Show a "Logged In" message if user is logged in */}
-          {isLoggedIn && (
-            <div className="absolute left-0 mt-2 bg-white shadow-lg rounded-md w-72 p-4">
-              <p className="text-lg font-semibold">Welcome Back, {loggedInUsername}!</p>
+          {/* Logout Button */}
+          {isLoggedIn && isDropdownOpen && (
+            <div className="absolute left-0 mt-2 bg-white shadow-lg rounded-md w-72 p-4 z-50">
               <button
-                onClick={() => {
-    
-                  setIsLoggedIn(false);
-                  setLoggedInUsername('');
-                  formik.resetForm();
-                  setIsDropdownOpen(false); 
-                }}
+                onClick={handleLogout}
                 className="mt-2 w-full py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-all"
               >
                 Logout
@@ -138,7 +145,7 @@ function NavBar({}) {
           )}
         </div>
 
-        {/* Account Link */}
+        {/* Nav Links */}
         <NavLink
           to="/Account"
           className={({ isActive }) =>
@@ -150,7 +157,6 @@ function NavBar({}) {
           Account
         </NavLink>
 
-        {/* Other Nav Links */}
         <NavLink
           to="/"
           className={({ isActive }) =>
@@ -205,7 +211,6 @@ function NavBar({}) {
         >
           Reviews
         </NavLink>
-        
       </nav>
     </div>
   );

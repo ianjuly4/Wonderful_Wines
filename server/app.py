@@ -30,15 +30,20 @@ class Wines(Resource):
     def post(self):
         data = request.get_json()
         print("Request Data:", data)
-             
-        new_wine = Wine(
-            name=data.get('name', ''),
-            type=data.get('type', ''),
-            location=data.get('location', ''),
-            price=data.get('price', 0),
-            flavor_profile=data.get('flavorProfile', ''),
-            image=data.get('image')  
-        )
+
+        user_id = session.get('user_id')
+
+        if not user_id:
+            return make_response({"message": "Unauthorized, Please Login to Continue"}, 401)
+        else:
+            new_wine = Wine(
+                name=data.get('name', ''),
+                type=data.get('type', ''),
+                location=data.get('location', ''),
+                price=data.get('price', 0),
+                flavor_profile=data.get('flavorProfile', ''),
+                image=data.get('image')  
+            )
 
         db.session.add(new_wine)
         db.session.commit()
@@ -57,6 +62,8 @@ class Wines(Resource):
 
         response = make_response(jsonify(response_data), 201)
         return response
+    
+   
 
 api.add_resource(Wines, '/wines')
 
