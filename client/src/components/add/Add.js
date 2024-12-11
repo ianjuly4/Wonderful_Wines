@@ -1,11 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../Header";
 import AddForm from "./AddForm";
-import * as yup from "yup";
-import { useFormik } from "formik"; 
+
 
 
 function Add() {
+  const [user, setUser] = useState('')
+
+  useEffect(() => {
+    fetch("/check_session").then((response) => {
+      if (response.ok) {
+        response.json().then((user) => setUser(user))
+        console.log(user);
+      }
+    });
+  }, []);
+
 
 
   const displayStarRating = (rating) => {
@@ -23,8 +33,8 @@ function Add() {
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-r from-red-400 to-white">
-      <Header/>
-      <AddForm displayStarRating={displayStarRating}/>
+      <Header setUser={setUser}/>
+      <AddForm displayStarRating={displayStarRating} setUser={setUser}/>
     </div>
   );
 }

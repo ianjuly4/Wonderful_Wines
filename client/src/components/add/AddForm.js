@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import * as yup from "yup";
 import { useFormik } from "formik";
 
-function AddForm({ displayStarRating }) {
+function AddForm({ displayStarRating, setUser }) {
   const [message, setMessage] = useState("");  
   const formik = useFormik({
     initialValues: {

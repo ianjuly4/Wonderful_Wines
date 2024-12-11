@@ -1,17 +1,31 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import * as yup from "yup";
 import { useFormik } from "formik";
 
-function NavBar({}) {
+function NavBar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);  
   const [loggedInUsername, setLoggedInUsername] = useState(''); 
   const [loginError, setLoginError] = useState(''); 
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen); 
-  };
+  useEffect(() => {
+    fetch("/check_session")
+      .then((response) => {
+        if (response.ok) {
+          return response.json(); // Return the parsed JSON here
+        } else {
+          throw new Error('No active session');
+        }
+      })
+      .then((user) => {
+        setIsLoggedIn(true);
+        setLoggedInUsername(user.username); // Assuming 'user' contains a 'username' field
+      })
+      .catch((error) => {
+        console.log("No active session or error:", error);
+      });
+  }, []);
 
   const formik = useFormik({
     initialValues: {
@@ -66,6 +80,11 @@ function NavBar({}) {
         console.error(error);
       });
   };
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen); 
+  };
+
 
   return (
     <div className="w-full bg-gradient-to-r from-red-400 to-white flex justify-center items-center h-16">

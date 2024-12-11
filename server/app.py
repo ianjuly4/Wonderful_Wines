@@ -28,41 +28,48 @@ class Wines(Resource):
         return response
 
     def post(self):
+    
         data = request.get_json()
         print("Request Data:", data)
 
+        
         user_id = session.get('user_id')
-
         if not user_id:
             return make_response({"message": "Unauthorized, Please Login to Continue"}, 401)
-        else:
-            new_wine = Wine(
-                name=data.get('name', ''),
-                type=data.get('type', ''),
-                location=data.get('location', ''),
-                price=data.get('price', 0),
-                flavor_profile=data.get('flavorProfile', ''),
-                image=data.get('image')  
-            )
+
+
+        new_wine = Wine(
+            name=data.get('name', ''),
+            type=data.get('type', ''),
+            location=data.get('location', ''),
+            price=data.get('price', 0),
+            flavor_profile=data.get('flavorProfile', ''),
+            image=data.get('image')
+        )
+
 
         db.session.add(new_wine)
         db.session.commit()
 
-        new_star_review = Review(
+      
+        new_review = Review(
             wine_id=new_wine.id,
-            star_review=data.get('rating', '')
+            user_id=user_id,
+            star_review=data.get('rating', ''),
+
         )
-        db.session.add(new_star_review)
+
+        db.session.add(new_review)
         db.session.commit()
 
+        
         response_data = {
             "wine": new_wine.to_dict(),
-            "review": new_star_review.to_dict()
+            "review": new_review.to_dict()
         }
 
-        response = make_response(jsonify(response_data), 201)
-        return response
-    
+        
+        return make_response(response_data, 201)
    
 
 api.add_resource(Wines, '/wines')
@@ -123,6 +130,29 @@ class WinesById(Resource):
 
         
 api.add_resource(WinesById, "/wines/<int:id>")
+
+class GetWinesByUser(Resource):
+    def get(self, username):
+       
+        user = User.query.filter_by(username=username).first()
+
+        if not user:
+            return make_response({"message": "User not found"}, 404)
+
+        wines = user.wines  
+       
+        if not wines:
+            return make_response({"message": "No wines found for this user"}, 404)
+
+        
+        wines_list = [wine.to_dict() for wine in wines]
+
+        
+        return make_response({"wines": wines_list}, 200)
+
+
+api.add_resource(GetWinesByUser, '/wines/<string:username>')
+
 
 class Reviews(Resource):
     def get(self):
@@ -230,8 +260,6 @@ class Signup(Resource):
     
 api.add_resource(Signup, "/signup")
 
-
-
 class Login(Resource):
     def post(self):
         data = request.get_json()  
@@ -256,8 +284,6 @@ class Login(Resource):
                
 api.add_resource(Login, '/login')
 
-
-    
 class Logout(Resource):
     def delete(self):
         session['user_id'] = None
@@ -266,9 +292,20 @@ class Logout(Resource):
 
 api.add_resource(Logout, '/logout')
 
+class CheckSession(Resource):
+    def get(self):
+        print(f"Session content: {session}")
+        user = User.query.filter(User.id == session.get('user_id')).first()
+        if user:
+            user_dict = user.to_dict()
+            return make_response(
+                user_dict,
+                200
+            )
+        else:
+            return {}, 401
 
-
-
+api.add_resource(CheckSession, '/check_session')
 
 
 if __name__ == '__main__':
