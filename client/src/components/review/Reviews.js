@@ -1,7 +1,7 @@
 import React from "react";
 
-function Reviews({review, displayStarRating, number, onDelete}){
-    const {comment, star_review, wine} = review
+function Reviews({review, displayStarRating, number, onDelete, wine}){
+    const {comment, star_review,} = review || {};
     const { name, type, image, location, flavor_profile, price } = wine || {}; 
     const defaultImage = "path_to_default_image.jpg";
     

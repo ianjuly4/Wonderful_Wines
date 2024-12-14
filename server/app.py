@@ -77,7 +77,7 @@ api.add_resource(Wines, '/wines')
 class WinesById(Resource):
     def get(self, id):
 
-        response_dict = Wine.query.filter_by(id=id).first().to_dict()
+        response_dict = Wine.query.filter(Wine.id==id).first().to_dict()
 
         response = make_response(
             response_dict,
@@ -184,7 +184,7 @@ api.add_resource(Reviews, '/reviews')
 class ReviewsById(Resource):
     def get(self, id):
 
-        response_dict = Review.query.filter_by(id=id).first().to_dict()
+        response_dict = Review.query.filter(Review.id==id).first().to_dict()
 
         response = make_response(
             response_dict,
@@ -266,7 +266,7 @@ class Login(Resource):
         username = data['username']
         password = data['password']
        
-        user = User.query.filter_by(username=username).first()  
+        user = User.query.filter(User.username==username).first()  
         
         if user and user.authenticate(password):
             session['user_id'] = user.id
