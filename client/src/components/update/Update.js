@@ -11,19 +11,47 @@ function Update() {
   const [wineType, setWineType] = useState("");
   const [wineLocation, setWineLocation] = useState("");
   const [selectedWineId, setSelectedWineId] = useState(null); 
+  const [userId, setUserId] = useState("")
+ 
 
   useEffect(() => {
-    fetch("/wines", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((r) => r.json())
-      .then((wineData) => {
-        setWines(wineData);
+    fetch("/check_session")
+      .then((response) => {
+        if (response.ok) {
+          response.json().then((data) => {
+            console.log(data.id); 
+            setUserId(data.id); 
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Error checking session:", error)
+    
       });
-  }, []);
+  }, []); 
+  
+  useEffect(() => {
+    if (userId) { 
+      fetch(`/userwines/${userId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((r) => r.json())
+        .then((wineData) => {
+          if (wineData && Array.isArray(wineData.wines)) {
+            setWines(wineData.wines);
+          } else {
+            console.error("Invalid wine data:", wineData);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching wines:", error)
+  
+        });
+    }
+  }, [userId]); 
 
   const onSearchWineNameChange = (text) => setWineName(text);
   const onSearchWineTypeChange = (text) => setWineType(text);
@@ -60,7 +88,9 @@ function Update() {
     <div className="min-h-screen w-full bg-gradient-to-r from-red-400 to-white">
       <Header />
       <div className="flex p-4 space-x-8">
+        
         <div className="w-1/4">
+        <h3>To update a wine, please click one</h3>
           <WineFilter
             onSearchWineTypeChange={onSearchWineTypeChange}
             onSearchWineNameChange={onSearchWineNameChange}
@@ -80,23 +110,27 @@ function Update() {
             />
           )}
         </div>
-
         <div className="w-3/4">
           <div className="flex flex-wrap gap-4">
-            {filteredWines.map((wine) => (
-              <div
-                key={wine.id}
-                className="relative flex-shrink-0 w-1/4"
-                onClick={() => handleWineCardClick(wine.id)} 
-              >
-                <UpdateWines wine={wine} />
-              </div>
-            ))}
+            {filteredWines.length === 0 ? (
+              <p>No wines found for current user.</p>
+            ) : (
+              filteredWines.map((wine) => (
+                <div
+                  key={wine.id}
+                  className="relative flex-shrink-0 w-1/4"
+                  onClick={() => handleWineCardClick(wine.id)}
+                >
+                  <UpdateWines wine={wine} />
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>
     </div>
   );
 }
-
 export default Update;
+
+

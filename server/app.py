@@ -93,11 +93,9 @@ class WinesById(Resource):
         if not wine:
             return make_response({"error": "Wine not found"}, 404)
 
-        # Delete the wine item
         db.session.delete(wine)
         db.session.commit()
 
-        # Success response
         return make_response({"message": "Wine successfully deleted"}, 200)
 
     def patch(self, id):
