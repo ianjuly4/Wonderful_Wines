@@ -13,14 +13,14 @@ function NavBar() {
     fetch("/check_session")
       .then((response) => {
         if (response.ok) {
-          return response.json(); // Return the parsed JSON here
+          return response.json(); 
         } else {
           throw new Error('No active session');
         }
       })
       .then((user) => {
         setIsLoggedIn(true);
-        setLoggedInUsername(user.username); // Assuming 'user' contains a 'username' field
+        setLoggedInUsername(user.username); 
       })
       .catch((error) => {
         console.log("No active session or error:", error);

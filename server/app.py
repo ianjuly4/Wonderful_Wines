@@ -37,39 +37,39 @@ class Wines(Resource):
         if not user_id:
             return make_response({"message": "Unauthorized, Please Login to Continue"}, 401)
 
+        else:
+            new_wine = Wine(
+                name=data.get('name', ''),
+                type=data.get('type', ''),
+                location=data.get('location', ''),
+                price=data.get('price', 0),
+                flavor_profile=data.get('flavorProfile', ''),
+                image=data.get('image')
+            )
 
-        new_wine = Wine(
-            name=data.get('name', ''),
-            type=data.get('type', ''),
-            location=data.get('location', ''),
-            price=data.get('price', 0),
-            flavor_profile=data.get('flavorProfile', ''),
-            image=data.get('image')
-        )
 
-
-        db.session.add(new_wine)
-        db.session.commit()
+            db.session.add(new_wine)
+            db.session.commit()
 
       
-        new_review = Review(
-            wine_id=new_wine.id,
-            user_id=user_id,
-            star_review=data.get('rating', ''),
+            new_review = Review(
+                wine_id=new_wine.id,
+                user_id=user_id,
+                star_review=data.get('rating', ''),
 
-        )
+            )
 
-        db.session.add(new_review)
-        db.session.commit()
-
-        
-        response_data = {
-            "wine": new_wine.to_dict(),
-            "review": new_review.to_dict()
-        }
+            db.session.add(new_review)
+            db.session.commit()
 
         
-        return make_response(response_data, 201)
+            response_data = {
+                "wine": new_wine.to_dict(),
+                "review": new_review.to_dict()
+            }
+
+        
+            return make_response(response_data, 201)
    
 
 api.add_resource(Wines, '/wines')
@@ -87,18 +87,18 @@ class WinesById(Resource):
         return response
     
     def delete(self, id):
+    
         wine = Wine.query.filter(Wine.id == id).first()
 
+        if not wine:
+            return make_response({"error": "Wine not found"}, 404)
+
+        # Delete the wine item
         db.session.delete(wine)
         db.session.commit()
 
-        response_dict = {"message": "wine successfully deleted"}
-
-        response = make_response(
-            response_dict,
-            200
-        )
-        return response
+        # Success response
+        return make_response({"message": "Wine successfully deleted"}, 200)
 
     def patch(self, id):
         data = request.get_json()
@@ -131,10 +131,11 @@ class WinesById(Resource):
         
 api.add_resource(WinesById, "/wines/<int:id>")
 
-class GetWinesByUser(Resource):
-    def get(self, username):
+class GetWinesByUserId(Resource):
+
+    def get(self, id):
        
-        user = User.query.filter_by(username=username).first()
+        user = User.query.filter(User.id==id).first()
 
         if not user:
             return make_response({"message": "User not found"}, 404)
@@ -151,7 +152,7 @@ class GetWinesByUser(Resource):
         return make_response({"wines": wines_list}, 200)
 
 
-api.add_resource(GetWinesByUser, '/wines/<string:username>')
+api.add_resource(GetWinesByUserId, '/userwines/<int:id>')
 
 
 class Reviews(Resource):
@@ -159,6 +160,7 @@ class Reviews(Resource):
         review_dict_list = [review.to_dict() for review in Review.query.all()]
         response = make_response(review_dict_list, 200)
         return response
+    
     def post(self):
         data = request.get_json()
         print("Request Data:", data)

@@ -7,15 +7,6 @@ import AddForm from "./AddForm";
 function Add() {
   const [user, setUser] = useState('')
 
-  useEffect(() => {
-    fetch("/check_session").then((response) => {
-      if (response.ok) {
-        response.json().then((user) => setUser(user))
-        console.log(user);
-      }
-    });
-  }, []);
-
 
 
   const displayStarRating = (rating) => {
