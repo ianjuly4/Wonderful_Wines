@@ -84,10 +84,9 @@ function UpdateForm({ selectedWineId, wines, onUpdate }) {
     <div className="p-4 rounded-lg shadow-lg bg-red flex flex-col gap-4">
       <form onSubmit={formik.handleSubmit}>
         <div className="flex flex-col gap-4">
-          {/* Wine Name */}
           <div>
             <h4>UPDATE WINES</h4>
-            
+             {/* Wine Name */}
             <label htmlFor="name" className="block text-sm font-medium text-gray-700">
               Wine Name
             </label>
@@ -188,7 +187,7 @@ function UpdateForm({ selectedWineId, wines, onUpdate }) {
               Wine Price
             </label>
             <input
-              type="text"
+              type="number"
               id="price"
               name="price"
               placeholder="Update Wine Price"

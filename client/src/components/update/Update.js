@@ -11,27 +11,29 @@ function Update() {
   const [wineType, setWineType] = useState("");
   const [wineLocation, setWineLocation] = useState("");
   const [selectedWineId, setSelectedWineId] = useState(null); 
-  const [userId, setUserId] = useState("")
- 
-
+  const [userId, setUserId] = useState(""); 
+  const [errorMessage, setErrorMessage] = useState(""); 
+  
   useEffect(() => {
     fetch("/check_session")
       .then((response) => {
         if (response.ok) {
           response.json().then((data) => {
-            console.log(data.id); 
-            setUserId(data.id); 
+            setUserId(data.id);
+            setErrorMessage(""); 
           });
+        } else {
+          setErrorMessage("You must be logged in to update wines.");
         }
       })
       .catch((error) => {
-        console.error("Error checking session:", error)
-    
+        console.error("Error checking session:", error);
+        setErrorMessage("Error checking session. Please try again later.");
       });
-  }, []); 
-  
+  }, []);
+
   useEffect(() => {
-    if (userId) { 
+    if (userId) {
       fetch(`/userwines/${userId}`, {
         method: "GET",
         headers: {
@@ -43,15 +45,15 @@ function Update() {
           if (wineData && Array.isArray(wineData.wines)) {
             setWines(wineData.wines);
           } else {
-            console.error("Invalid wine data:", wineData);
+            setErrorMessage("No wines found for the current user.");
           }
         })
         .catch((error) => {
-          console.error("Error fetching wines:", error)
-  
+          console.error("Error fetching wines:", error);
+          setErrorMessage("Error fetching wines. Please try again later.");
         });
     }
-  }, [userId]); 
+  }, [userId]);
 
   const onSearchWineNameChange = (text) => setWineName(text);
   const onSearchWineTypeChange = (text) => setWineType(text);
@@ -81,16 +83,14 @@ function Update() {
     setSelectedWineId(updatedWine.id);
   };
 
-
   const selectedWine = wines.find((wine) => wine.id === selectedWineId);
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-r from-red-400 to-white">
       <Header />
       <div className="flex p-4 space-x-8">
-        
         <div className="w-1/4">
-        <h3>To update a wine, please click one</h3>
+          <h3>To update a wine, please click one</h3>
           <WineFilter
             onSearchWineTypeChange={onSearchWineTypeChange}
             onSearchWineNameChange={onSearchWineNameChange}
@@ -110,27 +110,38 @@ function Update() {
             />
           )}
         </div>
+
         <div className="w-3/4">
-          <div className="flex flex-wrap gap-4">
-            {filteredWines.length === 0 ? (
-              <p>No wines found for current user.</p>
-            ) : (
-              filteredWines.map((wine) => (
-                <div
-                  key={wine.id}
-                  className="relative flex-shrink-0 w-1/4"
-                  onClick={() => handleWineCardClick(wine.id)}
-                >
-                  <UpdateWines wine={wine} />
+          {/* Error message for login */}
+          {!userId ? (
+            <p className="text-black">Please Login to Continue</p>
+          ) : (
+            <>
+              {errorMessage ? (
+                <p className="text-black">{errorMessage}</p>
+              ) : (
+                <div className="flex flex-wrap gap-4">
+                  {filteredWines.length === 0 ? (
+                    <p>No wines found for the current user.</p>
+                  ) : (
+                    filteredWines.map((wine) => (
+                      <div
+                        key={wine.id}
+                        className="relative flex-shrink-0 w-1/4"
+                        onClick={() => handleWineCardClick(wine.id)}
+                      >
+                        <UpdateWines wine={wine} />
+                      </div>
+                    ))
+                  )}
                 </div>
-              ))
-            )}
-          </div>
+              )}
+            </>
+          )}
         </div>
       </div>
     </div>
   );
 }
+
 export default Update;
-
-
