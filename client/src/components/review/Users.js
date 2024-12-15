@@ -1,7 +1,19 @@
 import React from "react";
 
-function Reviews({review}){
-    const { comment, starReview } = review
+function Users({ user }) {
+    const { username, avatar, reviews } = user;
+    const { comment, starReview, wine } = reviews
+
+    console.log(reviews.wine)
+
+    const numberOfReviews = (reviews) => {
+        if (reviews.length === 0) {
+            return "This user has not reviewed any wines yet."
+        } else {
+            const reviewsLength = reviews.length;
+                return `This user has reviewed ${reviewsLength} wines.`
+        }
+    };
   
     
     return (
@@ -17,13 +29,13 @@ function Reviews({review}){
             {/*Username */}
             <div>
             <h3 className="font-bold text-xl text-gray-800 mb-2 text-center">
-            {comment}
+            {username || "Unknown User"}
             </h3>
             </div>
 
             {/*Number of reviews */}
             <div className="text-center text-gray-600">
-            <p className="text-sm">{}</p>
+            <p className="text-sm">{numberOfReviews(reviews)}</p>
             </div>
                 {/* Most Highest Reviewed Wines */}
             <div>
@@ -33,4 +45,5 @@ function Reviews({review}){
         </div>
     );
 }
-export default Reviews
+
+export default Users;

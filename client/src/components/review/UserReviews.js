@@ -1,8 +1,7 @@
-import React from "react";
+import React from "react"
 
-function Reviews({review}){
+function UserReviews({review}){
     const { comment, starReview } = review
-  
     
     return (
         <div className="bg-white rounded-lg shadow-lg p-6 w-full">
@@ -33,4 +32,4 @@ function Reviews({review}){
         </div>
     );
 }
-export default Reviews
+export default UserReviews

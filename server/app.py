@@ -1,6 +1,5 @@
 from flask import request, session, make_response, jsonify
 from flask_restful import Resource
-from sqlalchemy.exc import IntegrityError
 from config import app, db, Api, CORS, Migrate
 from models import Wine, Review, User
 
@@ -155,6 +154,7 @@ api.add_resource(GetWinesByUserId, '/userwines/<int:id>')
 
 class Reviews(Resource):
     def get(self):
+
         review_dict_list = [review.to_dict() for review in Review.query.all()]
         response = make_response(review_dict_list, 200)
         return response
@@ -182,6 +182,7 @@ class Reviews(Resource):
 api.add_resource(Reviews, '/reviews')
 
 class ReviewsById(Resource):
+
     def get(self, id):
 
         response_dict = Review.query.filter(Review.id==id).first().to_dict()
@@ -194,6 +195,7 @@ class ReviewsById(Resource):
         return response
     
     def delete(self, id):
+        
         review = Review.query.filter(Review.id == id).first()
 
         db.session.delete(review)
@@ -228,7 +230,21 @@ class ReviewsById(Resource):
     
 api.add_resource(ReviewsById, "/reviews/<int:id>" )
 
+class Users(Resource):
+    def get(self):
+        
+        user_dict_list = [user.to_dict() for user in User.query.all()]
+
+        response = make_response(
+            user_dict_list, 
+            200
+            )
+        return response
+    
+api.add_resource(Users, "/users")
+
 class Signup(Resource):
+
     def post(self):
         data = request.get_json()
         print(data)
