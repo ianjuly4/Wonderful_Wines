@@ -1,23 +1,21 @@
 import React, { useState, useEffect } from 'react';
 
-
 const MyContext = React.createContext();
 
 function MyContextProvider({ children }) {
-  const [user, setUser] = useState({});
-  const [wines, setWines] = useState([]) 
-  
+  const [user, setUser] = useState(null); 
+  const [wines, setWines] = useState([]);
+
   useEffect(() => {
     fetch("/check_session")
       .then((response) => {
         if (response.ok) {
-          return response.json(); 
+          return response.json();
         } else {
-          throw new Error('Session not valid'); 
+          throw new Error('Session not valid');
         }
       })
       .then((userData) => {
-        console.log(userData)
         setUser(userData); 
       })
       .catch((error) => {
@@ -35,7 +33,6 @@ function MyContextProvider({ children }) {
     })
       .then((r) => r.json())
       .then((wineData) => {
-        console.log(wineData.reviews)
         setWines(wineData);
       })
       .catch((error) => {
@@ -43,13 +40,21 @@ function MyContextProvider({ children }) {
       });
   }, []);
 
+  
+  const login = (userData) => {
+    setUser(userData); 
+  };
 
+  
+  const logout = () => {
+    setUser(null);
+  };
 
   return (
-    <MyContext.Provider value={{user, wines}}>
-      {children} 
+    <MyContext.Provider value={{ user, wines, login, logout }}>
+      {children}
     </MyContext.Provider>
   );
 }
 
-export { MyContext, MyContextProvider};
+export { MyContext, MyContextProvider };

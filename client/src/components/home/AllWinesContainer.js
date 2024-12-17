@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { NavLink } from "react-router-dom"; 
 import AllWines from "./AllWines";
 import WineFilter from "../WineFilter";
 
@@ -51,9 +52,12 @@ function AllWinesContainer({ displayStarRating, wines }) {
 
       {/* Wine list */}
       <div className="wine-list grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {filteredWines.map((wine) => (
+        {wines.map((wine) => (
           <div key={wine.id} className="wine-card-container">
-            <AllWines wine={wine} displayStarRating={displayStarRating} />
+            {/* Wrap each wine card with NavLink to navigate to wine details page */}
+            <NavLink to={`/wine/${wine.id}`} className="block">
+              <AllWines wine={wine} displayStarRating={displayStarRating} />
+            </NavLink>
           </div>
         ))}
       </div>

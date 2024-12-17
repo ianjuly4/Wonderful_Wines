@@ -24,7 +24,7 @@ function Add() {
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-r from-red-400 to-white">
-      <Header setUser={setUser}/>
+      <Header/>
       <AddForm displayStarRating={displayStarRating} setUser={setUser}/>
     </div>
   );

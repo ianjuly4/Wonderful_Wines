@@ -1,6 +1,8 @@
 import React from "react";
 import NavBar from "./NavBar";
 
+import {MyContextProvider} from "./MyContext"
+
 function Header({user}) {
   return (
     <div className="bg-gradient-to-r from-red-400 to-white py-10 px-4 ">
@@ -10,7 +12,9 @@ function Header({user}) {
       </h1>
       
       {/* Navigation Bar */}
-      <NavBar user={user} />
+      <MyContextProvider>
+        <NavBar/>
+      </MyContextProvider>
     </div>
   );
 }

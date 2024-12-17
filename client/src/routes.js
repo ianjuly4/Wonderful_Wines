@@ -4,10 +4,11 @@ import ReviewPage from "./components/review/ReviewPage";
 import Update from "./components/update/Update";
 import Delete from "./components/delete/Delete";
 import Account from "./components/Login/Account";
+import WineDetail from "./components/home/WineDetail";  
 
 const routes = [
   {
-    path: "/users",
+    path: "/users",  
     element: <Account />,
   },
   {
@@ -15,20 +16,25 @@ const routes = [
     element: <Home />,
   },
   {
-    path: "/wines",
+    path: "/wines/new",
     element: <Add />,
   },
   {
-    path: "/Delete",
+    path: "/delete",
     element: <Delete />,
   },
   {
-    path: "/Update",
+    path: "/update",
     element: <Update />,
   },
   {
     path: "/reviews",
     element: <ReviewPage />,
+  },
+
+  {
+    path: "/wine/:wineId",  
+    element: <WineDetail />,  
   },
 ];
 

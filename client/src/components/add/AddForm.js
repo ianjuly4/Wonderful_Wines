@@ -4,6 +4,7 @@ import { useFormik } from "formik";
 
 function AddForm({ displayStarRating, setUser }) {
   const [message, setMessage] = useState("");  
+  
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -13,12 +14,13 @@ function AddForm({ displayStarRating, setUser }) {
       price: "",
       image: "",
       rating: "",
+      comment:""
     },
     validationSchema: yup.object().shape({
-      name: yup.string().required("Must enter a wine name"),
-      type: yup.string().required("Must enter a wine type"),
-      location: yup.string().required("Must enter a location"),
-      flavorProfile: yup.string().required("Must enter a flavor profile"),
+      name: yup.string().required("Must enter a wine name").max(50),
+      type: yup.string().required("Must enter a wine type").max(25),
+      location: yup.string().required("Must enter a location").max(25),
+      flavorProfile: yup.string().required("Must enter a flavor profile").max(50),
       price: yup
         .number()
         .positive()
@@ -34,6 +36,7 @@ function AddForm({ displayStarRating, setUser }) {
         .required("Must enter a wine rating")
         .typeError("please enter an integer")
         .max(5),
+      flavorProfile: yup.string().required("Must enter a review comment").max(50),
     }),
     onSubmit: async (values) => {
       try {
@@ -147,6 +150,19 @@ function AddForm({ displayStarRating, setUser }) {
 
                 <input
                     type="text"
+                    name="comment"
+                    placeholder="New Wine Review Comment"
+                    value={formik.values.comment}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    style={{ border: "2px solid black", padding: "10px", width: "100%" }}
+                />
+            {formik.touched.comment && formik.errors.comment && (
+            <div style={{ color: "black" }}>{formik.errors.comment}</div>
+            )}
+
+                <input
+                    type="text"
                     name="image"
                     placeholder="New Wine Image URL"
                     value={formik.values.image}
@@ -170,7 +186,8 @@ function AddForm({ displayStarRating, setUser }) {
             alt={formik.values.name || ""}
           />
           <h5 className="text-gray-600 text-sm">{formik.values.location || ""}</h5>
-          <h5 className="text-gray-600 text-sm">{formik.values.flavorProfile || ""}</h5>
+          <p className="text-gray-600 text-sm">{formik.values.flavorProfile || ""}</p>
+          <p className="text-gray-600 text-sm">{formik.values.comment || ""}</p>
 
           {formik.values.rating && (
             <h5 className="text-lg font-semibold mt-2">{displayStarRating(formik.values.rating)}</h5>

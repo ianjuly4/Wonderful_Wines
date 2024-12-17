@@ -1,32 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { NavLink } from "react-router-dom";
 import * as yup from "yup";
 import { useFormik } from "formik";
 
-function NavBar() {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);  
-  const [loggedInUsername, setLoggedInUsername] = useState(''); 
-  const [loginError, setLoginError] = useState(''); 
+import { MyContext } from './MyContext';
 
-  useEffect(() => {
-    // Fetch session info on component mount to check if user is logged in
-    const checkSession = async () => {
-      try {
-        const response = await fetch("/check_session");
-        if (response.ok) {
-          const user = await response.json();
-          setIsLoggedIn(true);
-          setLoggedInUsername(user.username); 
-        } else {
-          throw new Error('No active session');
-        }
-      } catch (error) {
-        console.log("No active session or error:", error);
-      }
-    };
-    checkSession();
-  }, []);
+function NavBar() {
+  const { user } = useContext(MyContext); 
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [loginError, setLoginError] = useState(''); 
 
   const formik = useFormik({
     initialValues: {
@@ -51,10 +34,8 @@ function NavBar() {
         .then((r) => r.json())
         .then((response) => {
           if (response.message) {
-            setIsLoggedIn(true);  
-            setLoggedInUsername(values.username);
-            setLoginError(''); 
-            setIsDropdownOpen(false); 
+            setLoginError('');
+            setIsDropdownOpen(false);
           } else if (response.error) {
             setLoginError(response.error);
           }
@@ -75,9 +56,7 @@ function NavBar() {
     })
       .then((r) => r.json())
       .then(() => {
-        setIsLoggedIn(false);
-        setLoggedInUsername('');  // Clear logged-in username
-        setIsDropdownOpen(false);  // Close dropdown after logout
+        setIsDropdownOpen(false);  
       })
       .catch((error) => {
         console.error(error);
@@ -88,7 +67,6 @@ function NavBar() {
     setIsDropdownOpen(!isDropdownOpen); 
   };
 
-  // Close dropdown when clicking outside of it
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (event.target.closest('.dropdown') === null) {
@@ -110,16 +88,15 @@ function NavBar() {
             onClick={toggleDropdown}
             className="text-5xl text-white font-semibold hover:text-black transition-all"
           >
-            {isLoggedIn ? 'Logout' : 'Login'}
+            {user ? 'Logout' : 'Login'}
           </button>
 
           {/* Login Form Dropdown */}
-          {!isLoggedIn && isDropdownOpen && (
+          {!user && isDropdownOpen && (
             <div className="absolute left-0 mt-2 bg-white shadow-lg rounded-md w-72 p-4 z-50">
               <form onSubmit={formik.handleSubmit} className="space-y-4">
                 {/* Username Input */}
                 <div>
-                   {/* Display login error message */}
                   {loginError && <div className="text-red-500 text-sm">{loginError}</div>}
                   <label htmlFor="username" className="block text-lg font-semibold">
                     Username
@@ -173,7 +150,7 @@ function NavBar() {
           )}
 
           {/* Logout Button */}
-          {isLoggedIn && isDropdownOpen && (
+          {user && isDropdownOpen && (
             <div className="absolute left-0 mt-2 bg-white shadow-lg rounded-md w-72 p-4 z-50">
               <button
                 onClick={handleLogout}
@@ -187,7 +164,7 @@ function NavBar() {
 
         {/* Nav Links */}
         <NavLink
-          to="/Account"
+          to="/users"
           className={({ isActive }) =>
             isActive
               ? "nav-link text-5xl text-black font-semibold hover:text-black"
@@ -198,7 +175,7 @@ function NavBar() {
         </NavLink>
 
         <NavLink
-          to="/"
+          to="/wines"
           className={({ isActive }) =>
             isActive
               ? "nav-link text-5xl text-black font-semibold hover:text-black"
@@ -209,7 +186,7 @@ function NavBar() {
         </NavLink>
 
         <NavLink
-          to="/Add"
+          to="/wines/new"
           className={({ isActive }) =>
             isActive
               ? "nav-link text-5xl text-black font-semibold hover:text-black"
@@ -220,7 +197,7 @@ function NavBar() {
         </NavLink>
 
         <NavLink
-          to="/Delete"
+          to="/delete"
           className={({ isActive }) =>
             isActive
               ? "nav-link text-5xl text-black font-semibold hover:text-black"
@@ -231,7 +208,7 @@ function NavBar() {
         </NavLink>
 
         <NavLink
-          to="/Update"
+          to="/update"
           className={({ isActive }) =>
             isActive
               ? "nav-link text-5xl text-black font-semibold hover:text-black"
@@ -242,7 +219,7 @@ function NavBar() {
         </NavLink>
 
         <NavLink
-          to="/Review"
+          to="/reviews"
           className={({ isActive }) =>
             isActive
               ? "nav-link text-5xl text-black font-semibold hover:text-black"

@@ -28,6 +28,7 @@ function AllWines({ wine, displayStarRating }) {
           <h5 className="text-sm mt-2 truncate">{flavor_profile || "Unknown Flavor Profile"}</h5>
           <h5 className="text-sm mt-2 truncate">{location || "Unknown Location"}</h5>
           {/* Display star rating if available */}
+          
           {/*<h5 className="text-lg font-semibold text-yellow-400 mb-2">
             {star_review !== undefined ? displayStarRating(star_review) : "No Rating Available"}
           </h5>*/}

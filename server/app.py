@@ -355,7 +355,7 @@ class CheckSession(Resource):
                 200
             )
         else:
-            return {}, 401
+            return {"message":"No user currently logged in"}, 401
 
 api.add_resource(CheckSession, '/check_session')
 
