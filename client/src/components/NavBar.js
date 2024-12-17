@@ -10,21 +10,22 @@ function NavBar() {
   const [loginError, setLoginError] = useState(''); 
 
   useEffect(() => {
-    fetch("/check_session")
-      .then((response) => {
+    // Fetch session info on component mount to check if user is logged in
+    const checkSession = async () => {
+      try {
+        const response = await fetch("/check_session");
         if (response.ok) {
-          return response.json(); 
+          const user = await response.json();
+          setIsLoggedIn(true);
+          setLoggedInUsername(user.username); 
         } else {
           throw new Error('No active session');
         }
-      })
-      .then((user) => {
-        setIsLoggedIn(true);
-        setLoggedInUsername(user.username); 
-      })
-      .catch((error) => {
+      } catch (error) {
         console.log("No active session or error:", error);
-      });
+      }
+    };
+    checkSession();
   }, []);
 
   const formik = useFormik({
@@ -75,6 +76,8 @@ function NavBar() {
       .then((r) => r.json())
       .then(() => {
         setIsLoggedIn(false);
+        setLoggedInUsername('');  // Clear logged-in username
+        setIsDropdownOpen(false);  // Close dropdown after logout
       })
       .catch((error) => {
         console.error(error);
@@ -85,13 +88,23 @@ function NavBar() {
     setIsDropdownOpen(!isDropdownOpen); 
   };
 
+  // Close dropdown when clicking outside of it
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (event.target.closest('.dropdown') === null) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
 
   return (
     <div className="w-full bg-gradient-to-r from-red-400 to-white flex justify-center items-center h-16">
       <nav className="flex space-x-4">
         
         {/* Login/Logout Dropdown */}
-        <div className="relative">
+        <div className="relative dropdown">
   
           <button
             onClick={toggleDropdown}

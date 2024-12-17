@@ -12,9 +12,7 @@ function Account() {
         <div className="w-full max-w-md">
             <Signup />
         </div>
-        <div className="w-full max-w-md">
-            <Login />
-        </div>
+       
         </div>
     </div>
   );

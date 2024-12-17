@@ -20,11 +20,15 @@ class Index(Resource):
 
 api.add_resource(Index, '/')
 
+
 class Wines(Resource):
     def get(self):
         wine_dict_list = [wine.to_dict() for wine in Wine.query.all()]
-        response = make_response(wine_dict_list, 200)
-        return response
+
+        if wine_dict_list:
+            return (wine_dict_list, 200)
+        else:
+            return({"message": "No Wines Found"}, 404)
 
     def post(self):
     
@@ -151,8 +155,29 @@ class GetWinesByUserId(Resource):
 
 api.add_resource(GetWinesByUserId, '/userwines/<int:id>')
 
+class GetReviewByWine(Resource):
+     def get(self, id):
+
+        wine = Wine.query.filter(Wine.id == id).first()
+
+        if not wine:
+            return make_response({"message": "No wines found for this id"}, 404)
+        
+        reviews = wine.reviews
+
+        if not reviews:
+            return make_response({"message": "No reviews found for this wine"}, 404)
+        
+        review_list = [review.to_dict() for review in reviews]
+
+        return make_response({"reviews": review_list}, 200)
+        
+
+api.add_resource(GetReviewByWine, "/reviewbywine/<int:id>")    
+
 
 class Reviews(Resource):
+
     def get(self):
 
         review_dict_list = [review.to_dict() for review in Review.query.all()]
@@ -160,10 +185,16 @@ class Reviews(Resource):
         return response
     
     def post(self):
+    
         data = request.get_json()
         print("Request Data:", data)
              
+        user_id = session.get('user_id')
+        if not user_id:
+            return make_response({"message": "Unauthorized, Please Login to Continue"}, 401)
+     
         new_review = Review(
+            user_id=user_id,
             comment=data.get('comment', ''),
             star_review=data.get('star_review', '')
         )
@@ -171,12 +202,14 @@ class Reviews(Resource):
         db.session.add(new_review)
         db.session.commit()
 
-        response_data = {
-            "review": new_review.to_dict()
-        }
+        return new_review.to_dict(), 201
 
-        response = make_response(jsonify(response_data), 201)
-        return response
+        # response_data = {
+        #     "review": new_review.to_dict()
+        # }
+
+        # response = make_response(jsonify(response_data), 201)
+        # return response
     
 
 api.add_resource(Reviews, '/reviews')
@@ -195,7 +228,7 @@ class ReviewsById(Resource):
         return response
     
     def delete(self, id):
-        
+
         review = Review.query.filter(Review.id == id).first()
 
         db.session.delete(review)
@@ -231,6 +264,7 @@ class ReviewsById(Resource):
 api.add_resource(ReviewsById, "/reviews/<int:id>" )
 
 class Users(Resource):
+    
     def get(self):
         
         user_dict_list = [user.to_dict() for user in User.query.all()]
@@ -248,8 +282,9 @@ class Signup(Resource):
     def post(self):
         data = request.get_json()
         print(data)
+
         if not data:
-            return make_response({"message": "Invalid JSON. No data provided."}, 400)
+            return make_response({"message": "Invalid data. No data provided."}, 400)
         
         username = data.get('username')
         password = data.get('password')
@@ -309,6 +344,7 @@ class Logout(Resource):
 api.add_resource(Logout, '/logout')
 
 class CheckSession(Resource):
+
     def get(self):
         print(f"Session content: {session}")
         user = User.query.filter(User.id == session.get('user_id')).first()
