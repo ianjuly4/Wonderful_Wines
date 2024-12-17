@@ -1,35 +1,26 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import TopRatedWine from "./TopRatedWine";
 
-function TopRatedContainer({ displayStarRating }) {
-  const [reviews, setReviews] = useState([]);
+function TopRatedContainer({ displayStarRating, wines }) {
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  const reviews = wines?.reviews || [];
 
   const topRatedWines = [3, 4, 5];
 
-  useEffect(() => {
-    fetch("/reviews", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((r) => r.json())
-      .then((reviewData) => {
-        const filteredTopRated = reviewData.filter((review) =>
-          topRatedWines.includes(review.star_review)
-        );
-        setReviews(filteredTopRated);
-      });
-  }, []);
+  const filteredTopRated = reviews.filter((review) =>
+    topRatedWines.includes(review.star_review)
+  );
 
-  const visibleWines = reviews.slice(currentIndex, currentIndex + 4);
+  const visibleWines = filteredTopRated.slice(currentIndex, currentIndex + 4);
+
 
   const scrollRight = () => {
-    if (currentIndex + 4 < reviews.length) {
+    if (currentIndex + 4 < filteredTopRated.length) {
       setCurrentIndex(currentIndex + 4);
     }
   };
+
 
   const scrollLeft = () => {
     if (currentIndex - 4 >= 0) {
@@ -40,7 +31,7 @@ function TopRatedContainer({ displayStarRating }) {
   return (
     <div className="flex flex-col items-center w-full">
       <h3 className="text-2xl font-bold w-full mb-6 text-gray-800 italic">
-        TOP RATED WINE
+        TOP RATED WINES
       </h3>
 
       <div className="relative w-full">

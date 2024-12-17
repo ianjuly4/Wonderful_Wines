@@ -2,28 +2,13 @@ import React, { useState, useEffect } from "react";
 import AllWines from "./AllWines";
 import WineFilter from "../WineFilter";
 
-function AllWinesContainer({ displayStarRating }) {
-  const [wines, setWines] = useState([]);
+function AllWinesContainer({ displayStarRating, wines }) {
   const [wineName, setWineName] = useState("");
   const [winePrice, setWinePrice] = useState("");
   const [wineType, setWineType] = useState("");
   const [wineLocation, setWineLocation] = useState("");
 
-  useEffect(() => {
-    fetch("/wines", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((r) => r.json())
-      .then((wineData) => {
-        setWines(wineData);
-      })
-      .catch((error) => {
-        console.error("Error fetching wines:", error);
-      });
-  }, []);
+
 
   if (wines.length === 0) {
     return <div>Loading...</div>;

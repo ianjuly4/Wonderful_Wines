@@ -1,7 +1,7 @@
 import React from "react";
 import NavBar from "./NavBar";
 
-function Header({setUser}) {
+function Header({user}) {
   return (
     <div className="bg-gradient-to-r from-red-400 to-white py-10 px-4 ">
       {/* Title */}
@@ -10,7 +10,7 @@ function Header({setUser}) {
       </h1>
       
       {/* Navigation Bar */}
-      <NavBar setUser={setUser} />
+      <NavBar user={user} />
     </div>
   );
 }

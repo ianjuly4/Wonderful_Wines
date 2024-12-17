@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Wines from "./Wines"
 
-function RedWineContainer({ displayStarRating }) {
-  const [wines, setWines] = useState([]);
+function RedWineContainer({ displayStarRating, wines }) {
   const [currentIndex, setCurrentIndex] = useState(0); 
   
   const redWineTypes = [
@@ -16,23 +15,6 @@ function RedWineContainer({ displayStarRating }) {
     "red blend"
   ];
 
-  useEffect(() => {
- 
-    fetch("/wines", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((r) => r.json())
-      .then((wineData) => {
-      
-        const filteredRedWines = wineData.filter((wine) =>
-          redWineTypes.includes(wine.type.toLowerCase())
-        );
-        setWines(filteredRedWines);
-      });
-  }, []);
 
  
   const visibleWines = wines.slice(currentIndex, currentIndex + 4);

@@ -1,29 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Wines from "./Wines"
 
-function SparklingContainer({ displayStarRating }) {
-  const [wines, setWines] = useState([]);
+function SparklingContainer({ displayStarRating, wines }) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  
-
-  useEffect(() => {
-    fetch("/wines", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((r) => r.json())
-      .then((wineData) => {
-  
-        const filteredSparklingWines = wineData.filter((wine) =>
-          wine.type == "Sparkling/Champagne"
-        );
-        setWines(filteredSparklingWines);
-      })
-      .catch((error) => console.error("Error fetching wines:", error));
-  }, []);
 
   const visibleWines = wines.slice(currentIndex, currentIndex + 4);
 
