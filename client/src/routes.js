@@ -7,15 +7,15 @@ import Account from "./components/Login/Account";
 
 const routes = [
   {
-    path: "/Account",
+    path: "/users",
     element: <Account />,
   },
   {
-    path: "/",
+    path: "/wines",
     element: <Home />,
   },
   {
-    path: "/Add",
+    path: "/wines",
     element: <Add />,
   },
   {
@@ -27,7 +27,7 @@ const routes = [
     element: <Update />,
   },
   {
-    path: "/Review",
+    path: "/reviews",
     element: <ReviewPage />,
   },
 ];
