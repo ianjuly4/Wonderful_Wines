@@ -1,8 +1,11 @@
 import React from "react";
 
-function TopRatedWine({ review, displayStarRating }) {
-  const { star_review, comment, wine } = review;
-  const { name, type, image, location, flavor_profile, price } = wine;
+function TopRatedWine({ displayStarRating, wine }) {
+  const { name, type, image, price, reviews } = wine;
+  
+  // Assuming each wine has an array of reviews and you're using the first one
+  const review = reviews?.[0] || {}; // Safely access the first review if exists
+  const { star_review, comment } = review;
 
   const defaultImage = "path_to_default_image.jpg"; 
 
@@ -16,19 +19,21 @@ function TopRatedWine({ review, displayStarRating }) {
         backgroundRepeat: 'no-repeat',
       }}
     >
-  
       <div className="absolute inset-0 bg-black opacity-30 z-0" />
-
-   
+      
       <div className="relative z-10 flex flex-col justify-between h-full p-4">
         <div>
+          {/* Display Star Rating */}
           <h5 className="text-lg font-semibold text-yellow-400 mb-2">
-            {displayStarRating(star_review)}
+            {displayStarRating(star_review || 0)} {/* Fallback to 0 if star_review is undefined */}
           </h5>
+
+          {/* Wine Name and Type */}
           <h3 className="font-bold text-xl text-white mb-2">{name || "Unknown Wine"}</h3>
           <h5 className="text-white text-base mb-2">{type || "Unknown Type"}</h5>
         </div>
 
+        {/* Wine Price */}
         <h5 className="text-lg font-semibold text-white mt-4">
           ${price !== undefined ? price : "Unknown Price"}
         </h5>

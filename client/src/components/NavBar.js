@@ -207,16 +207,7 @@ function NavBar() {
           Delete
         </NavLink>
 
-        <NavLink
-          to="/update"
-          className={({ isActive }) =>
-            isActive
-              ? "nav-link text-5xl text-black font-semibold hover:text-black"
-              : "nav-link text-5xl text-white font-semibold hover:text-black transition-all"
-          }
-        >
-          Update
-        </NavLink>
+        
 
         <NavLink
           to="/reviews"

@@ -8,7 +8,6 @@ import WineFilter from "../WineFilter";
 
 function WineList({ wines }) {
 
-  // Function to display star ratings
   const displayStarRating = (rating) => {
     let fullStars = Math.floor(rating); 
     let halfStars = rating % 1 >= 0.5 ? 1 : 0; 

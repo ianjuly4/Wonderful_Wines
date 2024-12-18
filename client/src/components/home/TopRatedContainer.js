@@ -1,16 +1,15 @@
 import React, { useState } from "react";
-import TopRatedWine from "./TopRatedWine";
+import { NavLink } from "react-router-dom"; 
+import TopRatedWine from "./TopRatedWine"; 
 
 function TopRatedContainer({ displayStarRating, wines }) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const reviews = wines?.reviews || [];
 
-  const topRatedWines = [3, 4, 5];
-
-  const filteredTopRated = reviews.filter((review) =>
-    topRatedWines.includes(review.star_review)
+  const filteredTopRated = wines.filter((wine) => 
+    wine.reviews?.some((review) => [3, 4, 5].includes(review.star_review))
   );
+
 
   const visibleWines = filteredTopRated.slice(currentIndex, currentIndex + 4);
 
@@ -21,7 +20,7 @@ function TopRatedContainer({ displayStarRating, wines }) {
     }
   };
 
-
+  
   const scrollLeft = () => {
     if (currentIndex - 4 >= 0) {
       setCurrentIndex(currentIndex - 4);
@@ -46,10 +45,10 @@ function TopRatedContainer({ displayStarRating, wines }) {
 
         {/* Container for the wine cards, horizontally scrollable */}
         <div className="wine-container flex overflow-hidden space-x-4">
-          {visibleWines.map((review) => (
-            <div key={review.id} className="m-4 w-64">
-              <TopRatedWine review={review} displayStarRating={displayStarRating} />
-            </div>
+          {visibleWines.map((wine) => (
+             <NavLink to={`/wines/${wine.id}`} className="block">
+              <TopRatedWine wine={wine} displayStarRating={displayStarRating} />
+           </NavLink>
           ))}
         </div>
 

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Wines from "./Wines"
+import { NavLink } from "react-router-dom"; 
 
 function RedWineContainer({ displayStarRating, wines }) {
   const [currentIndex, setCurrentIndex] = useState(0); 
@@ -51,9 +52,9 @@ function RedWineContainer({ displayStarRating, wines }) {
         {/* Container for the wine cards, horizontally scrollable */}
         <div className="wine-container flex overflow-hidden space-x-4">
           {visibleWines.map((wine) => (
-            <div key={wine.id} className="m-4 w-64">
+            <NavLink to={`/wines/${wine.id}`} className="block">
               <Wines wine={wine} displayStarRating={displayStarRating} />
-            </div>
+            </NavLink>
           ))}
         </div>
 

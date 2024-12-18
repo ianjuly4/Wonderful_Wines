@@ -1,10 +1,11 @@
 import React from "react";
 
 function AllWines({ wine, displayStarRating }) {
-  const { name, type, image, location, flavor_profile, price, review } = wine;
- 
+  const { name, type, image, location, flavor_profile, price, reviews } = wine;
+  
+  // If there are reviews, grab the star rating from the first review
+  const star_review = reviews && reviews.length > 0 ? reviews[0].star_review : null;
 
- 
   const defaultImage = "path_to_default_image.jpg"; 
 
   return (
@@ -27,11 +28,14 @@ function AllWines({ wine, displayStarRating }) {
           <h5 className="text-base truncate">{type || "Unknown Type"}</h5>
           <h5 className="text-sm mt-2 truncate">{flavor_profile || "Unknown Flavor Profile"}</h5>
           <h5 className="text-sm mt-2 truncate">{location || "Unknown Location"}</h5>
-          {/* Display star rating if available */}
-          
-          {/*<h5 className="text-lg font-semibold text-yellow-400 mb-2">
-            {star_review !== undefined ? displayStarRating(star_review) : "No Rating Available"}
-          </h5>*/}
+
+          {/* Display Star Rating or "No reviews yet" */}
+          <div className="text-yellow-400 mt-2">
+            {star_review !== null
+              ? displayStarRating(star_review) // Display the stars using the passed down function
+              : "No reviews yet"} {/* Fallback if no reviews are available */}
+          </div>
+
           <h5 className="text-lg font-semibold mt-2">
             ${price !== undefined ? price.toFixed(2) : "Unknown Price"}
           </h5>

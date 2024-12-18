@@ -9,8 +9,6 @@ function AllWinesContainer({ displayStarRating, wines }) {
   const [wineType, setWineType] = useState("");
   const [wineLocation, setWineLocation] = useState("");
 
-
-
   if (wines.length === 0) {
     return <div>Loading...</div>;
   }
@@ -55,7 +53,7 @@ function AllWinesContainer({ displayStarRating, wines }) {
         {wines.map((wine) => (
           <div key={wine.id} className="wine-card-container">
             {/* Wrap each wine card with NavLink to navigate to wine details page */}
-            <NavLink to={`/wine/${wine.id}`} className="block">
+            <NavLink to={`/wines/${wine.id}`} className="block">
               <AllWines wine={wine} displayStarRating={displayStarRating} />
             </NavLink>
           </div>

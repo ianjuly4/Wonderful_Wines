@@ -24,16 +24,12 @@ const routes = [
     element: <Delete />,
   },
   {
-    path: "/update",
-    element: <Update />,
-  },
-  {
     path: "/reviews",
     element: <ReviewPage />,
   },
 
   {
-    path: "/wine/:wineId",  
+    path: "/wines/:wineId",  
     element: <WineDetail />,  
   },
 ];

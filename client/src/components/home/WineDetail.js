@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Header from "../Header";
+import RenderedReviewCard from "./RenderedReviewCard";
 
 function WineDetail() {
   const { wineId } = useParams();
@@ -26,7 +27,7 @@ function WineDetail() {
     return <div>Loading...</div>;
   }
 
-  // Function to display star rating
+  
   const displayStarRating = (rating) => {
     if (typeof rating !== "number") {
       return "No rating available";
@@ -43,7 +44,7 @@ function WineDetail() {
     return stars;
   };
 
-  // Render individual reviews as "cards"
+
   function renderReviewCards() {
     if (Array.isArray(wine.reviews) && wine.reviews.length > 0) {
       return wine.reviews.map((review) => (
@@ -96,11 +97,17 @@ function WineDetail() {
               ${wine.price ? wine.price.toFixed(2) : "Unknown Price"}
             </h5>
 
-            {/* Reviews - Display review cards or a message */}
-            <div className="mt-4">
-              <h5 className="text-lg font-semibold">Reviews</h5>
-              <div className="text-sm mt-2">{renderReviewCards()}</div>
-            </div>
+            {/* Reviews section */}
+          <div className="mt-4">
+            <h5 className="text-lg font-semibold">Reviews</h5>
+            {wine.reviews && wine.reviews.length > 0 ? (
+              wine.reviews.map((review) => (
+                <RenderedReviewCard key={review.id} review={review} />
+              ))
+            ) : (
+              <p>No reviews yet for this wine</p>
+            )}
+          </div>
           </div>
         </div>
       </div>
