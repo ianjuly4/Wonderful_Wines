@@ -181,6 +181,7 @@ function NavBar() {
               ? "nav-link text-5xl text-black font-semibold hover:text-black"
               : "nav-link text-5xl text-white font-semibold hover:text-black transition-all"
           }
+          end // 'end' ensures this is matched exactly to the '/wines' route
         >
           Home
         </NavLink>

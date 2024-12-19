@@ -278,6 +278,30 @@ class Users(Resource):
     
 api.add_resource(Users, "/users")
 
+class UserById(Resource):
+    def get(self, id):
+       
+        user = User.query.filter(User.id==id).first()
+
+        if not user:
+            return make_response({"message": "User not found"}, 404)
+
+        wines = user.wines  
+       
+        if not wines:
+            return make_response({"message": "No wines found for this user"}, 404)
+
+        
+        wines_list = [wine.to_dict() for wine in wines]
+
+        
+        return make_response({"wines": wines_list}, 200)
+
+api.add_resource(UserById, "/users/<int:id>")
+
+
+
+
 class Signup(Resource):
 
     def post(self):

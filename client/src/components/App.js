@@ -1,15 +1,12 @@
-import React, { useContext } from 'react';
-import { UserContext } from './MyContext';
-import Home from './components/Home';
-
-import { MyContextProvider } from './MyContext';
+import React from 'react';
+import { MyContextProvider } from './MyContext';  
+import Home from './components/Home'; 
 
 function App() {
-  
   return (
     <main>
-      <MyContextProvider>
-        <Home/>
+      <MyContextProvider>   
+        <Home />           
       </MyContextProvider>
     </main>
   );
