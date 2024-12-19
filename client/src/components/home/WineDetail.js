@@ -88,9 +88,13 @@ function WineDetail() {
             <p className="text-sm mb-6">{wine.flavor_profile || "No flavor profile available"}</p>
             
             {/* Display rating */}
-            <h5 className="text-lg font-semibold text-yellow-400 mb-2">
-              {wine.reviews && wine.reviews[0]?.star_review ? displayStarRating(wine.reviews[0].star_review) : "No rating available"}
+            <h5 className={`text-lg font-semibold mb-2 
+              ${wine.reviews && wine.reviews[0]?.star_review ? "text-yellow-400" : "text-black"}`}>
+              {wine.reviews && wine.reviews[0]?.star_review 
+              ? displayStarRating(wine.reviews[0].star_review) 
+              : "No rating available"}
             </h5>
+
 
             {/* Price */}
             <h5 className="text-lg font-semibold mt-2">

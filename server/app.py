@@ -59,6 +59,7 @@ class Wines(Resource):
                 wine_id=new_wine.id,
                 user_id=user_id,
                 star_review=data.get('rating', ''),
+                comment=data.get('comment','')
 
             )
 

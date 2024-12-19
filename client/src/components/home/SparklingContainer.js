@@ -1,15 +1,20 @@
-import React, { useEffect, useState } from "react";
-import Wines from "./Wines"
-import { NavLink } from "react-router-dom"; 
+import React, { useState } from "react";
+import Wines from "./Wines";
+import { NavLink } from "react-router-dom";
 
 function SparklingContainer({ displayStarRating, wines }) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
 
-  const visibleWines = wines.slice(currentIndex, currentIndex + 4);
+  const sparklingWines = wines.filter(
+    (wine) => wine.type.toLowerCase() === "sparkling/champagne"
+  );
+
+  // Slice the filtered sparkling wines for pagination
+  const visibleWines = sparklingWines.slice(currentIndex, currentIndex + 4);
 
   const scrollRight = () => {
-    if (currentIndex + 4 < wines.length) {
+    if (currentIndex + 4 < sparklingWines.length) {
       setCurrentIndex(currentIndex + 4);
     }
   };
@@ -34,8 +39,8 @@ function SparklingContainer({ displayStarRating, wines }) {
         </button>
 
         <div className="wine-container flex overflow-hidden space-x-4">
-          {visibleWines.map((wine, index) => (
-            <NavLink to={`/wines/${wine.id}`} className="block">
+          {visibleWines.map((wine) => (
+            <NavLink to={`/wines/${wine.id}`} key={wine.id} className="block">
               <Wines wine={wine} displayStarRating={displayStarRating} />
             </NavLink>
           ))}

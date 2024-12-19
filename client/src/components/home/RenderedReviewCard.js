@@ -1,4 +1,4 @@
-// RenderedReviewCard.js
+
 import React from "react";
 
 const RenderedReviewCard = ({ review }) => {

@@ -16,7 +16,7 @@ function Login() {
         .max(25)
     }),
     onSubmit: (values) => {
-      fetch("login", {
+      fetch("/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -24,8 +24,8 @@ function Login() {
         body: JSON.stringify(values),
       })
         .then((r) => r.json())
-        .then((newUser) => {
-          console.log("Submitted:", newUser);
+        .then((user) => {
+          console.log("Submitted:", user);
         })
         .catch((error) => console.error("Error:", error));
       formik.resetForm();

@@ -19,10 +19,7 @@ const routes = [
     path: "/wines/new",
     element: <Add />,
   },
-  {
-    path: "/delete",
-    element: <Delete />,
-  },
+ 
   {
     path: "/reviews",
     element: <ReviewPage />,

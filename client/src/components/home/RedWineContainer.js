@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
-import Wines from "./Wines"
-import { NavLink } from "react-router-dom"; 
+import React, { useState } from "react";
+import Wines from "./Wines";
+import { NavLink } from "react-router-dom";
 
 function RedWineContainer({ displayStarRating, wines }) {
-  const [currentIndex, setCurrentIndex] = useState(0); 
-  
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  // Red wine types array
   const redWineTypes = [
     "merlot",
     "cabernet sauvignon",
@@ -13,21 +14,23 @@ function RedWineContainer({ displayStarRating, wines }) {
     "zinfandel",
     "malbec",
     "shiraz",
-    "red blend"
+    "red blend",
   ];
 
+  
+  const redWines = wines.filter((wine) =>
+    redWineTypes.includes(wine.type.toLowerCase())
+  );
 
- 
-  const visibleWines = wines.slice(currentIndex, currentIndex + 4);
 
- 
+  const visibleWines = redWines.slice(currentIndex, currentIndex + 4);
+
   const scrollRight = () => {
-    if (currentIndex + 4 < wines.length) {
+    if (currentIndex + 4 < redWines.length) {
       setCurrentIndex(currentIndex + 4);
     }
   };
 
-  
   const scrollLeft = () => {
     if (currentIndex - 4 >= 0) {
       setCurrentIndex(currentIndex - 4);
@@ -36,11 +39,9 @@ function RedWineContainer({ displayStarRating, wines }) {
 
   return (
     <div className="flex flex-col items-center w-full">
-      <h3 className="text-2xl font-bold w-full mb-6 text-gray-800 italic">
-        RED WINES</h3>
+      <h3 className="text-2xl font-bold w-full mb-6 text-gray-800 italic">RED WINES</h3>
 
       <div className="relative w-full">
-        {/* Left arrow button */}
         <button
           onClick={scrollLeft}
           className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full"
@@ -49,16 +50,14 @@ function RedWineContainer({ displayStarRating, wines }) {
           ◁
         </button>
 
-        {/* Container for the wine cards, horizontally scrollable */}
         <div className="wine-container flex overflow-hidden space-x-4">
           {visibleWines.map((wine) => (
-            <NavLink to={`/wines/${wine.id}`} className="block">
+            <NavLink to={`/wines/${wine.id}`} key={wine.id} className="block">
               <Wines wine={wine} displayStarRating={displayStarRating} />
             </NavLink>
           ))}
         </div>
 
-        {/* Right arrow button */}
         <button
           onClick={scrollRight}
           className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full"

@@ -24,7 +24,7 @@ function NavBar() {
         .max(25)
     }),
     onSubmit: (values) => {
-      fetch("login", {
+      fetch("/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -193,21 +193,9 @@ function NavBar() {
               : "nav-link text-5xl text-white font-semibold hover:text-black transition-all"
           }
         >
-          Add
+          Add Wine
         </NavLink>
-
-        <NavLink
-          to="/delete"
-          className={({ isActive }) =>
-            isActive
-              ? "nav-link text-5xl text-black font-semibold hover:text-black"
-              : "nav-link text-5xl text-white font-semibold hover:text-black transition-all"
-          }
-        >
-          Delete
-        </NavLink>
-
-        
+    
 
         <NavLink
           to="/reviews"

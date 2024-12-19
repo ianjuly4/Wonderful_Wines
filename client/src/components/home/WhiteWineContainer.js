@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import Wines from "./Wines"
 import { NavLink } from "react-router-dom"; 
 
-function WhiteWineContainer({ displayStarRating }) {
-  const [wines, setWines] = useState([]);
+function WhiteWineContainer({ displayStarRating, wines }) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const whiteWineTypes = [
@@ -15,25 +14,12 @@ function WhiteWineContainer({ displayStarRating }) {
     "viognier",
   ];
 
-  useEffect(() => {
-    fetch("/wines", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((r) => r.json())
-      .then((wineData) => {
+  const whiteWines = wines.filter((wine) =>
+    whiteWineTypes.includes(wine.type.toLowerCase())
+  );
   
-        const filteredWhiteWines = wineData.filter((wine) =>
-          wine.type && whiteWineTypes.includes(wine.type.trim().toLowerCase())
-        );
-        setWines(filteredWhiteWines);
-      })
-      .catch((error) => console.error("Error fetching wines:", error));
-  }, []);
-
-  const visibleWines = wines.slice(currentIndex, currentIndex + 4);
+  
+  const visibleWines = whiteWines.slice(currentIndex, currentIndex + 4);
 
   const scrollRight = () => {
     if (currentIndex + 4 < wines.length) {
