@@ -105,11 +105,13 @@ function WineDetail() {
             {/* Reviews section */}
           <div className="mt-4">
             <h5 className="text-lg font-semibold">Reviews</h5>
+            <NavLink to="/reviews/new">
+                Add Review
+            </NavLink>
             {wine.reviews && wine.reviews.length > 0 ? (
               wine.reviews.map((review) => (
-                <NavLink to={'/reviews'} className="block">
                   <RenderedReviewCard key={review.id} review={review} />
-                </NavLink>
+
               ))
             ) : (
               <p>No reviews yet for this wine</p>

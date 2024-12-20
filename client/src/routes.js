@@ -25,7 +25,7 @@ const routes = [
     element: <WineDetail />,  
   },
   {
-    path: "/reviews",
+    path: "/reviews/new",
     element: <Reviews/>
   }
 ];

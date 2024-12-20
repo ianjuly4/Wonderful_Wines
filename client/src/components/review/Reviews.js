@@ -1,28 +1,23 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { MyContext } from "../MyContext";
-import Header from "../Header"
-import UserReviews from "./UserReviews"
-import AddReview from "./AddReview"
+import UserReviews from "./UserReviews";
+import AddReview from "./AddReview";
 
-function Reviews() {
-  const { user, login, logout, wines } = useContext(MyContext);
-  console.log(wines)
-  
+function Reviews({ wineId }) {
+  const { user, wines } = useContext(MyContext);
 
+  if (!user) {
+    return <div>Please log in to see or add reviews.</div>;
+  }
  
+  console.log(user.id);
+  console.log(wines)
+
+
   return (
-
-    
-    <div className="min-h-screen w-full bg-gradient-to-r from-red-400 to-white">
-      <Header user={user} />
-
-
-      {/* Render different views based on user authentication */}
-      {user ? (
-        <UserReviews />
-      ) : (
-        < AddReview />
-      )}
+    <div className="mt-4">
+      <h5 className="text-lg font-semibold">Reviews</h5>
+      
     </div>
   );
 }
