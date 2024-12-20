@@ -1,36 +1,30 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { MyContext } from "../MyContext";
+import Header from "../Header"
+import UserReviews from "./UserReviews"
+import AddReview from "./AddReview"
 
-function Reviews({review}){
-    const { comment, starReview } = review
+function Reviews() {
+  const { user, login, logout, wines } = useContext(MyContext);
+  console.log(wines)
   
+
+ 
+  return (
+
     
-    return (
-        <div className="bg-white rounded-lg shadow-lg p-6 w-full">
-        <div className="relative">
-            {/* Avatar (if provided) */}
-            {/*<img
-            src={avatar || "/default-avatar.png"}  
-            alt={username}
-            className="w-20 h-20 rounded-full mx-auto mb-4"
-            />*/}
+    <div className="min-h-screen w-full bg-gradient-to-r from-red-400 to-white">
+      <Header user={user} />
 
-            {/*Username */}
-            <div>
-            <h3 className="font-bold text-xl text-gray-800 mb-2 text-center">
-            {comment}
-            </h3>
-            </div>
 
-            {/*Number of reviews */}
-            <div className="text-center text-gray-600">
-            <p className="text-sm">{}</p>
-            </div>
-                {/* Most Highest Reviewed Wines */}
-            <div>
-
-            </div>
-        </div>
-        </div>
-    );
+      {/* Render different views based on user authentication */}
+      {user ? (
+        <UserReviews />
+      ) : (
+        < AddReview />
+      )}
+    </div>
+  );
 }
-export default Reviews
+
+export default Reviews;

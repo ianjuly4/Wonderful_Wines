@@ -21,20 +21,14 @@ function UserAccount({ user, logout, wines }) {
     if (halfStars) stars += "½";
 
     return stars;
-  }; 
-  console.log("User Object:", user);
-  console.log("User ID:", user.id);
-
+  };
 
   const usersWines = wines.filter((wine) => {
-
     const hasReviewByUser = wine.reviews.some(
       (review) => review.user_id === user.id
     );
     return hasReviewByUser;
   });
-
-  console.log("Filtered Wines by User ID:", usersWines);
 
   const filteredWines = usersWines.filter((wine) => {
     const matchesPrice =
@@ -47,8 +41,6 @@ function UserAccount({ user, logout, wines }) {
     return matchesPrice && matchesType && matchesName && matchesLocation;
   });
 
-  console.log("Filtered Wines:", filteredWines);
-
   return (
     <div>
       {/* Welcome message and logout button container */}
@@ -56,30 +48,34 @@ function UserAccount({ user, logout, wines }) {
         <h3 className="text-2xl font-bold text-gray-800 italic mb-4">
           WELCOME, {user.username}
         </h3>
-
+    
         {/* Logout Button */}
         <button onClick={logout} className="text-xl font-bold text-red-600 mb-6">
           Logout
         </button>
       </div>
 
-      {/* Wine Filter in a row layout */}
-      <div className="flex gap-6 items-center mb-6 w-full wine-filter-container flex-wrap">
-        <AllWinesFilter
-          onSearchWineTypeChange={setWineType}
-          onSearchWineNameChange={setWineName}
-          onSearchWinePriceChange={setWinePrice}
-          onSearchWineLocationChange={setWineLocation}
-          searchWineName={wineName}
-          searchWineType={wineType}
-          searchWinePrice={winePrice}
-          searchWineLocation={wineLocation}
-        />
-      </div>
+      <div className="flex flex-col items-center justify-center mt-2"> 
+        <h3 className="text-2xl font-bold text-gray-800 italic mb-4">
+          Please Click On One Of Your Wines to Update or Delete A Review
+        </h3>
+        
+        {/* Wine Filter in a row layout */}
+        <div className="flex gap-4 items-center mb-4 w-full flex-wrap"> 
+          <AllWinesFilter
+            onSearchWineTypeChange={setWineType}
+            onSearchWineNameChange={setWineName}
+            onSearchWinePriceChange={setWinePrice}
+            onSearchWineLocationChange={setWineLocation}
+            searchWineName={wineName}
+            searchWineType={wineType}
+            searchWinePrice={winePrice}
+            searchWineLocation={wineLocation}
+          />
+        </div>
 
-      {/* Display filtered wines */}
-      <div className="flex items-center justify-center min-h-[calc(100vh-60px)]">
-        <div className="wine-list grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {/* Display filtered wines */}
+        <div className="wine-list grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-4"> {/* Reduced gap here */}
           {filteredWines.length > 0 ? (
             filteredWines.map((wine) => (
               <div key={wine.id} className="wine-card-container">

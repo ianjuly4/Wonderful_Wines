@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Header from "../Header";
+import { NavLink } from "react-router-dom";
+import Reviews from "../review/Reviews"
 import RenderedReviewCard from "./RenderedReviewCard";
 
 function WineDetail() {
@@ -54,7 +56,6 @@ function WineDetail() {
             <span className="text-yellow-400">{displayStarRating(review.star_review)}</span>
           </div>
           <p className="text-sm mb-2">{review.comment || "No comment provided"}</p>
-          {/* Add reviewer info if available */}
           {review.user && (
             <p className="text-xs text-gray-600">- Reviewed by {review.user || "Anonymous"}</p>
           )}
@@ -106,7 +107,9 @@ function WineDetail() {
             <h5 className="text-lg font-semibold">Reviews</h5>
             {wine.reviews && wine.reviews.length > 0 ? (
               wine.reviews.map((review) => (
-                <RenderedReviewCard key={review.id} review={review} />
+                <NavLink to={'/reviews'} className="block">
+                  <RenderedReviewCard key={review.id} review={review} />
+                </NavLink>
               ))
             ) : (
               <p>No reviews yet for this wine</p>

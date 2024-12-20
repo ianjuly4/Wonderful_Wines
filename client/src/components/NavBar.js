@@ -196,18 +196,6 @@ function NavBar() {
         >
           Add Wine
         </NavLink>
-    
-
-        <NavLink
-          to="/reviews"
-          className={({ isActive }) =>
-            isActive
-              ? "nav-link text-5xl text-black font-semibold hover:text-black"
-              : "nav-link text-5xl text-white font-semibold hover:text-black transition-all"
-          }
-        >
-          Reviews
-        </NavLink>
       </nav>
     </div>
   );

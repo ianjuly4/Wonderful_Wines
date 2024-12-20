@@ -1,6 +1,6 @@
 import Home from "./components/home/Home";
 import Add from "./components/add/Add";
-import ReviewPage from "./components/review/ReviewPage";
+import Reviews from "./components/review/Reviews"
 import Update from "./components/update/Update";
 import Delete from "./components/delete/Delete";
 import Account from "./components/Login/Account";
@@ -21,14 +21,13 @@ const routes = [
   },
  
   {
-    path: "/reviews",
-    element: <ReviewPage />,
-  },
-
-  {
     path: "/wines/:wineId",  
     element: <WineDetail />,  
   },
+  {
+    path: "/reviews",
+    element: <Reviews/>
+  }
 ];
 
 export default routes;
