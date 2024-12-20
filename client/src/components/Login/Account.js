@@ -1,17 +1,22 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { MyContext } from "../MyContext";
 import Signup from "./Signup";
 import UserAccount from "./UserAccount";
+import AllWinesFilter from "../home/AllWinesFilter";
+import Header from "../Header"
 
 function Account() {
   const { user, login, logout, wines } = useContext(MyContext);
+  
 
-  useEffect(() => {
-   
-  }, [user, wines]);
-
+ 
   return (
-    <div>
+
+    
+    <div className="min-h-screen w-full bg-gradient-to-r from-red-400 to-white">
+      <Header user={user} />
+
+
       {/* Render different views based on user authentication */}
       {user ? (
         <UserAccount user={user} logout={logout} wines={wines} />
