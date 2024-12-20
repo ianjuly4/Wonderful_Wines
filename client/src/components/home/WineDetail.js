@@ -45,26 +45,7 @@ function WineDetail() {
 
     return stars;
   };
-
-
-  function renderReviewCards() {
-    if (Array.isArray(wine.reviews) && wine.reviews.length > 0) {
-      return wine.reviews.map((review) => (
-        <div key={review.id} className="bg-white border border-gray-300 rounded-lg shadow-md p-4 mb-4">
-          <div className="flex items-center mb-2">
-            {/* Display stars */}
-            <span className="text-yellow-400">{displayStarRating(review.star_review)}</span>
-          </div>
-          <p className="text-sm mb-2">{review.comment || "No comment provided"}</p>
-          {review.user && (
-            <p className="text-xs text-gray-600">- Reviewed by {review.user || "Anonymous"}</p>
-          )}
-        </div>
-      ));
-    } else {
-      return <p>No reviews yet for this wine</p>;
-    }
-  }
+  
 
   const defaultImage = "https://www.winespectrum.com/wp-content/uploads/2024/12/A1662-1.png";
 
@@ -105,8 +86,8 @@ function WineDetail() {
             {/* Reviews section */}
           <div className="mt-4">
             <h5 className="text-lg font-semibold">Reviews</h5>
-            <NavLink to="/reviews/new">
-                Add Review
+            <NavLink to={`/reviews/new/${wine.id}`} className="text-blue">
+              +  Add A For This Review Wine +
             </NavLink>
             {wine.reviews && wine.reviews.length > 0 ? (
               wine.reviews.map((review) => (

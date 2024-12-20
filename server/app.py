@@ -156,64 +156,47 @@ class GetWinesByUserId(Resource):
 
 api.add_resource(GetWinesByUserId, '/userwines/<int:id>')
 
-class GetReviewByWine(Resource):
-     def get(self, id):
-
-        wine = Wine.query.filter(Wine.id == id).first()
-
-        if not wine:
-            return make_response({"message": "No wines found for this id"}, 404)
-        
-        reviews = wine.reviews
-
-        if not reviews:
-            return make_response({"message": "No reviews found for this wine"}, 404)
-        
-        review_list = [review.to_dict() for review in reviews]
-
-        return make_response({"reviews": review_list}, 200)
-        
-
-api.add_resource(GetReviewByWine, "/reviewbywine/<int:id>")    
 
 
 class Reviews(Resource):
 
-    def get(self):
+    def get(self, id):
 
         review_dict_list = [review.to_dict() for review in Review.query.all()]
         response = make_response(review_dict_list, 200)
         return response
     
-    def post(self):
-    
+    def post(self, id):
+       
         data = request.get_json()
         print("Request Data:", data)
-             
+
+        wine = Wine.query.filter(Wine.id == id).first()
+
+       
+        if not wine:
+            return make_response({"message": "Wine not found"}, 404)
+
+        
         user_id = session.get('user_id')
         if not user_id:
             return make_response({"message": "Unauthorized, Please Login to Continue"}, 401)
-     
+
+        
         new_review = Review(
             user_id=user_id,
+            wine_id=wine.id, 
             comment=data.get('comment', ''),
-            star_review=data.get('star_review', '')
+            star_review=data.get('rating', '') 
         )
 
+       
         db.session.add(new_review)
         db.session.commit()
 
-        return new_review.to_dict(), 201
-
-        # response_data = {
-        #     "review": new_review.to_dict()
-        # }
-
-        # response = make_response(jsonify(response_data), 201)
-        # return response
+        return make_response(new_review.to_dict(), 201)  
     
-
-api.add_resource(Reviews, '/reviews')
+api.add_resource(Reviews, '/reviews/<int:id>')
 
 class ReviewsById(Resource):
 
