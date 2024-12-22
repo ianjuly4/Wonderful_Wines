@@ -3,8 +3,7 @@ import * as yup from "yup";
 import { useFormik } from "formik";
 import { MyContext } from '../MyContext'; 
 
-function AddForm({ displayStarRating }) {
-  const { user } = useContext(MyContext); 
+function AddForm({ displayStarRating, user }) {
   const [message, setMessage] = useState("");  
   const [isUserNotLoggedIn, setIsUserNotLoggedIn] = useState(false);
 
@@ -31,11 +30,7 @@ function AddForm({ displayStarRating }) {
       comment: yup.string().required("Must enter a review comment").max(50),
     }),
     onSubmit: (values) => {
-      if (!user) {
-        setMessage("You must be logged in to submit a review.");
-        return;
-      }
-
+     
       fetch("/wines", {
         method: "POST",
         headers: {

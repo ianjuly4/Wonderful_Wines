@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext } from "react";
 import Header from "../Header";
 import AddForm from "./AddForm";
-
-
+import UserError from "../review/UserError";
+import { MyContext } from '../MyContext';
 
 function Add() {
-  const [user, setUser] = useState('')
+  const { user } = useContext(MyContext);  
 
-
-
+  
   const displayStarRating = (rating) => {
     let fullStars = Math.floor(rating);
     let halfStars = rating % 1 >= 0.5 ? 1 : 0;
@@ -24,11 +23,16 @@ function Add() {
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-r from-red-400 to-white">
-      <Header/>
-      <AddForm displayStarRating={displayStarRating} setUser={setUser}/>
+      <Header />
+      
+      {/* Conditionally render UserError or AddForm based on user login status */}
+      {!user ? (
+        <UserError />  
+      ) : (
+        <AddForm displayStarRating={displayStarRating} user={user} />  
+      )}
     </div>
   );
 }
 
 export default Add;
-

@@ -16,7 +16,6 @@ function Home() {
     return <div>Error fetching wines: {error.message}</div>;
   }
 
-  // Handle empty wines list
   if (wines.length === 0) {
     return <div>No wines available at the moment.</div>;
   }

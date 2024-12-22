@@ -14,7 +14,7 @@ function Reviews() {
   useEffect(() => {
     const foundWine = wines.find((wine) => wine.id === parseInt(wineId));
     setWine(foundWine);
-    
+
   }, [wineId, wines]); 
 
 
@@ -36,12 +36,12 @@ function Reviews() {
 
   const defaultImage = "https://www.winespectrum.com/wp-content/uploads/2024/12/A1662-1.png";
 
-  // Handle case if the wine is still loading
+  
   if (!wine) {
     return <div>Loading wine details...</div>;
   }
 
-  // Check if user has already reviewed this wine
+
   const userReview = wine.reviews?.find((review) => review.user && review.user.id === user?.id);
 
   const handleReviewUpdate = (updatedReview) => {
