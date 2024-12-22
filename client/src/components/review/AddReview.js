@@ -5,13 +5,14 @@ import * as yup from "yup";
 function AddReview({ wineId }) {
   const [message, setMessage] = useState('');
 
+
   const formik = useFormik({
     initialValues: {
-      rating: "",
+      star_review: "",
       comment: ""
     },
     validationSchema: yup.object().shape({
-      rating: yup.number().positive().integer().required("Must enter a wine rating").typeError("Please enter an integer").max(5),
+      star_review: yup.number().positive().integer().required("Must enter a wine rating").typeError("Please enter an integer").max(5),
       comment: yup.string().required("Must enter a review comment").max(50),
     }),
     onSubmit: (values) => {
@@ -22,7 +23,7 @@ function AddReview({ wineId }) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          rating: values.rating,  
+          star_review: values.star_review,  
           comment: values.comment,  
         }),
       })
@@ -61,15 +62,15 @@ function AddReview({ wineId }) {
 
           <input
             type="text"
-            name="rating"
+            name="star_review"
             placeholder="New Wine Rating"
-            value={formik.values.rating}
+            value={formik.values.star_review}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             style={{ border: "2px solid black", padding: "10px", width: "100%" }}
           />
-          {formik.touched.rating && formik.errors.rating && (
-            <div style={{ color: "black", fontSize: "12px" }}>{formik.errors.rating}</div>
+          {formik.touched.star_review && formik.errors.star_review && (
+            <div style={{ color: "black", fontSize: "12px" }}>{formik.errors.star_review}</div>
           )}
         </div>
         <div className="flex justify-center mt-4">

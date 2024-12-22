@@ -16,7 +16,7 @@ const routes = [
     element: <Home />,
   },
   {
-    path: "/wines/new",
+    path: "/wines",
     element: <Add />,
   },
  
@@ -25,9 +25,10 @@ const routes = [
     element: <WineDetail />,  
   },
   {
-    path: "/reviews/new/:wineId",
-    element: <Reviews/>
+    path: "/wines/:wineId/reviews",
+    element: <Reviews />,
   }
+  
 ];
 
 export default routes;

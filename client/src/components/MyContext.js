@@ -24,7 +24,12 @@ function MyContextProvider({ children }) {
       });
   }, []);
 
+  // Fetching wine data on initial load
   useEffect(() => {
+    fetchWines();
+  }, []);
+
+  const fetchWines = () => {
     fetch("/wines", {
       method: "GET",
       headers: {
@@ -38,20 +43,18 @@ function MyContextProvider({ children }) {
       .catch((error) => {
         console.error("Error fetching wines:", error);
       });
-  }, []);
+  };
 
-  
   const login = (userData) => {
     setUser(userData); 
   };
 
-  
   const logout = () => {
     setUser(null);
   };
 
   return (
-    <MyContext.Provider value={{ user, wines, login, logout }}>
+    <MyContext.Provider value={{ user, wines, login, logout, fetchWines }}>
       {children}
     </MyContext.Provider>
   );

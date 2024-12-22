@@ -8,6 +8,7 @@ import RenderedReviewCard from "./RenderedReviewCard";
 function WineDetail() {
   const { wineId } = useParams();
   const [wine, setWine] = useState(null);
+  console.log(wineId)
 
   useEffect(() => {
     fetch(`/wines/${wineId}`)
@@ -86,7 +87,7 @@ function WineDetail() {
             {/* Reviews section */}
           <div className="mt-4">
             <h5 className="text-lg font-semibold">Reviews</h5>
-            <NavLink to={`/reviews/new/${wine.id}`} className="text-blue">
+            <NavLink to={`/wines/${wine.id}/reviews`} className="text-blue">
               +  Add A For This Review Wine +
             </NavLink>
             {wine.reviews && wine.reviews.length > 0 ? (

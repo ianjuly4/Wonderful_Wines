@@ -133,38 +133,8 @@ class WinesById(Resource):
         
 api.add_resource(WinesById, "/wines/<int:id>")
 
-class GetWinesByUserId(Resource):
-
-    def get(self, id):
-       
-        user = User.query.filter(User.id==id).first()
-
-        if not user:
-            return make_response({"message": "User not found"}, 404)
-
-        wines = user.wines  
-       
-        if not wines:
-            return make_response({"message": "No wines found for this user"}, 404)
-
-        
-        wines_list = [wine.to_dict() for wine in wines]
-
-        
-        return make_response({"wines": wines_list}, 200)
-
-
-api.add_resource(GetWinesByUserId, '/userwines/<int:id>')
-
-
 
 class Reviews(Resource):
-
-    def get(self, id):
-
-        review_dict_list = [review.to_dict() for review in Review.query.all()]
-        response = make_response(review_dict_list, 200)
-        return response
     
     def post(self, id):
        
@@ -187,7 +157,7 @@ class Reviews(Resource):
             user_id=user_id,
             wine_id=wine.id, 
             comment=data.get('comment', ''),
-            star_review=data.get('rating', '') 
+            star_review=data.get('star_review', '') 
         )
 
        
@@ -196,10 +166,6 @@ class Reviews(Resource):
 
         return make_response(new_review.to_dict(), 201)  
     
-api.add_resource(Reviews, '/reviews/<int:id>')
-
-class ReviewsById(Resource):
-
     def get(self, id):
 
         response_dict = Review.query.filter(Review.id==id).first().to_dict()
@@ -228,61 +194,28 @@ class ReviewsById(Resource):
         return response
     
     def patch(self, id):
+        data = request.get_json()
+        print("Received data:", data)  
 
         review = Review.query.filter(Review.id == id).first()
-        for attr in request.form:
-            setattr(review, attr, request.form[attr])
 
-        db.session.add(review)
+        if not review:
+            return make_response({"message": "Review not found"}, 404)
+
+        for attr, value in data.items():
+            print(f"Setting {attr} = {value}") 
+            setattr(review, attr, value)
+
         db.session.commit()
 
         response_dict = review.to_dict()
 
-        response = make_response(
-            response_dict,
-            200
-        )
+        return make_response(response_dict, 200)
 
-        return response
+
     
-api.add_resource(ReviewsById, "/reviews/<int:id>" )
-
-class Users(Resource):
     
-    def get(self):
-        
-        user_dict_list = [user.to_dict() for user in User.query.all()]
-
-        response = make_response(
-            user_dict_list, 
-            200
-            )
-        return response
-    
-api.add_resource(Users, "/users")
-
-class UserById(Resource):
-    def get(self, id):
-       
-        user = User.query.filter(User.id==id).first()
-
-        if not user:
-            return make_response({"message": "User not found"}, 404)
-
-        wines = user.wines  
-       
-        if not wines:
-            return make_response({"message": "No wines found for this user"}, 404)
-
-        
-        wines_list = [wine.to_dict() for wine in wines]
-
-        
-        return make_response({"wines": wines_list}, 200)
-
-api.add_resource(UserById, "/users/<int:id>")
-
-
+api.add_resource(Reviews, '/reviews/<int:id>')
 
 
 class Signup(Resource):
@@ -316,6 +249,7 @@ class Signup(Resource):
         new_user_dict = new_user.to_dict()
 
         return make_response(new_user_dict, 201)
+    
     
 api.add_resource(Signup, "/signup")
 

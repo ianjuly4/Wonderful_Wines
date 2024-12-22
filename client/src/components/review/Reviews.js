@@ -10,6 +10,8 @@ function Reviews() {
   const { user, wines } = useContext(MyContext); 
   const [wine, setWine] = useState(null);
 
+  console.log(wineId)
+
   useEffect(() => {
     const foundWine = wines.find((wine) => wine.id === parseInt(wineId));
     setWine(foundWine);
@@ -36,6 +38,11 @@ function Reviews() {
   if (!wine) {
     return <div>Loading wine details...</div>; 
   }
+
+  
+  const userReview = wine.reviews?.find((review) => review.user && review.user.id === user.id);
+
+  console.log(userReview)
 
   return (
     <div>
@@ -76,9 +83,12 @@ function Reviews() {
 
             {/* Reviews section */}
             <div className="mt-4">
-              <UserReviews wineId={wine.id}/>
-           
-              <AddReview wineId={wine.id} />
+              {/* Only show UserReviews if the current user has submitted a review */}
+              {userReview ? (
+                <UserReviews wineId={wineId} displayStarRating={displayStarRating} userReview={userReview} />
+              ) : (
+                <AddReview wineId={wineId} />
+              )}
             </div>
           </div>
         </div>

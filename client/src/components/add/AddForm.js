@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import * as yup from "yup";
 import { useFormik } from "formik";
+import { MyContext } from '../MyContext'; 
 
-function AddForm({ displayStarRating, setUser }) {
+function AddForm({ displayStarRating }) {
+  const { user } = useContext(MyContext); 
   const [message, setMessage] = useState("");  
+  const [isUserNotLoggedIn, setIsUserNotLoggedIn] = useState(false);
+
 
   const formik = useFormik({
     initialValues: {
@@ -27,6 +31,11 @@ function AddForm({ displayStarRating, setUser }) {
       comment: yup.string().required("Must enter a review comment").max(50),
     }),
     onSubmit: (values) => {
+      if (!user) {
+        setMessage("You must be logged in to submit a review.");
+        return;
+      }
+
       fetch("/wines", {
         method: "POST",
         headers: {
@@ -37,6 +46,7 @@ function AddForm({ displayStarRating, setUser }) {
         .then((result) => {
           if (result.ok) {
             setMessage("Wine added successfully!");
+            formik.resetForm(); 
           } else {
             result.json().then((data) => {
               setMessage(data.message || "An error occurred, please try again.");
@@ -46,13 +56,37 @@ function AddForm({ displayStarRating, setUser }) {
         .catch((error) => {
           setMessage("An unexpected error occurred.");
         });
-      formik.resetForm();
     },
   });
+
+  
+  const handleInputChange = (e) => {
+    if (!user) {
+      setIsUserNotLoggedIn(true); 
+    } else {
+      setIsUserNotLoggedIn(false); 
+    }
+    formik.handleChange(e);
+  };
+
+  
+  useEffect(() => {
+    if (user) {
+      setMessage(""); 
+    }
+  }, [user]);
 
   return (
     <div className="p-4 rounded shadow-lg flex flex-col gap-4">
       {message && <div className="message">{message}</div>}
+      
+      {/* Show warning message if the user is not logged in */}
+      {isUserNotLoggedIn && (
+        <div className="warning-message" style={{ color: "red", fontSize: "14px", marginBottom: "10px" }}>
+          You must be logged in to enter information in the form.
+        </div>
+      )}
+
       <div className="flex gap-8">
         <div className="flex-1 w-[40%]">
           <input
@@ -60,9 +94,14 @@ function AddForm({ displayStarRating, setUser }) {
             name="name"
             placeholder="New Wine Name"
             value={formik.values.name}
-            onChange={formik.handleChange}
+            onChange={handleInputChange} 
             onBlur={formik.handleBlur}
-            style={{ border: "2px solid black", padding: "10px", width: "100%" }}
+            style={{
+              border: "2px solid black", 
+              padding: "10px", 
+              width: "100%",
+              pointerEvents: !user ? "none" : "auto" 
+            }}
           />
           {formik.touched.name && formik.errors.name && (
             <div style={{ color: "black", fontSize: "12px" }}>{formik.errors.name}</div>
@@ -73,9 +112,14 @@ function AddForm({ displayStarRating, setUser }) {
             name="type"
             placeholder="New Wine Type"
             value={formik.values.type}
-            onChange={formik.handleChange}
+            onChange={handleInputChange}
             onBlur={formik.handleBlur}
-            style={{ border: "2px solid black", padding: "10px", width: "100%" }}
+            style={{
+              border: "2px solid black", 
+              padding: "10px", 
+              width: "100%",
+              pointerEvents: !user ? "none" : "auto" 
+            }}
           />
           {formik.touched.type && formik.errors.type && (
             <div style={{ color: "black", fontSize: "12px" }}>{formik.errors.type}</div>
@@ -86,9 +130,14 @@ function AddForm({ displayStarRating, setUser }) {
             name="location"
             placeholder="New Wine Location"
             value={formik.values.location}
-            onChange={formik.handleChange}
+            onChange={handleInputChange}
             onBlur={formik.handleBlur}
-            style={{ border: "2px solid black", padding: "10px", width: "100%" }}
+            style={{
+              border: "2px solid black", 
+              padding: "10px", 
+              width: "100%",
+              pointerEvents: !user ? "none" : "auto" 
+            }}
           />
           {formik.touched.location && formik.errors.location && (
             <div style={{ color: "black", fontSize: "12px" }}>{formik.errors.location}</div>
@@ -99,9 +148,14 @@ function AddForm({ displayStarRating, setUser }) {
             name="flavorProfile"
             placeholder="New Wine Flavor Profile"
             value={formik.values.flavorProfile}
-            onChange={formik.handleChange}
+            onChange={handleInputChange}
             onBlur={formik.handleBlur}
-            style={{ border: "2px solid black", padding: "10px", width: "100%" }}
+            style={{
+              border: "2px solid black", 
+              padding: "10px", 
+              width: "100%",
+              pointerEvents: !user ? "none" : "auto" 
+            }}
           />
           {formik.touched.flavorProfile && formik.errors.flavorProfile && (
             <div style={{ color: "black", fontSize: "12px" }}>{formik.errors.flavorProfile}</div>
@@ -112,9 +166,14 @@ function AddForm({ displayStarRating, setUser }) {
             name="price"
             placeholder="New Wine Price"
             value={formik.values.price}
-            onChange={formik.handleChange}
+            onChange={handleInputChange}
             onBlur={formik.handleBlur}
-            style={{ border: "2px solid black", padding: "10px", width: "100%" }}
+            style={{
+              border: "2px solid black", 
+              padding: "10px", 
+              width: "100%",
+              pointerEvents: !user ? "none" : "auto" 
+            }}
           />
           {formik.touched.price && formik.errors.price && (
             <div style={{ color: "black", fontSize: "12px" }}>{formik.errors.price}</div>
@@ -125,9 +184,14 @@ function AddForm({ displayStarRating, setUser }) {
             name="rating"
             placeholder="New Wine Rating"
             value={formik.values.rating}
-            onChange={formik.handleChange}
+            onChange={handleInputChange}
             onBlur={formik.handleBlur}
-            style={{ border: "2px solid black", padding: "10px", width: "100%" }}
+            style={{
+              border: "2px solid black", 
+              padding: "10px", 
+              width: "100%",
+              pointerEvents: !user ? "none" : "auto" 
+            }}
           />
           {formik.touched.rating && formik.errors.rating && (
             <div style={{ color: "black", fontSize: "12px" }}>{formik.errors.rating}</div>
@@ -138,9 +202,14 @@ function AddForm({ displayStarRating, setUser }) {
             name="comment"
             placeholder="New Wine Review Comment"
             value={formik.values.comment}
-            onChange={formik.handleChange}
+            onChange={handleInputChange}
             onBlur={formik.handleBlur}
-            style={{ border: "2px solid black", padding: "10px", width: "100%" }}
+            style={{
+              border: "2px solid black", 
+              padding: "10px", 
+              width: "100%",
+              pointerEvents: !user ? "none" : "auto" 
+            }}
           />
           {formik.touched.comment && formik.errors.comment && (
             <div style={{ color: "black", fontSize: "12px" }}>{formik.errors.comment}</div>
@@ -151,15 +220,20 @@ function AddForm({ displayStarRating, setUser }) {
             name="image"
             placeholder="New Wine Image URL"
             value={formik.values.image}
-            onChange={formik.handleChange}
+            onChange={handleInputChange}
             onBlur={formik.handleBlur}
-            style={{ border: "2px solid black", padding: "10px", width: "100%" }}
+            style={{
+              border: "2px solid black", 
+              padding: "10px", 
+              width: "100%",
+              pointerEvents: !user ? "none" : "auto" 
+            }}
           />
           {formik.touched.image && formik.errors.image && (
             <div style={{ color: "black", fontSize: "12px" }}>{formik.errors.image}</div>
           )}
         </div>
-            
+        
         <div className="flex-1 w-[40%] border-2 border-gray-600 rounded-lg shadow-md">
           <div className="w-full h-full p-4 bg-white shadow-md rounded flex flex-col items-center">
             <h3 className="font-bold text-xl mb-2">{formik.values.name || ""}</h3>
@@ -190,6 +264,7 @@ function AddForm({ displayStarRating, setUser }) {
             padding: "10px",
             border: "2px solid black",
           }}
+          disabled={!user} 
         >
           Submit
         </button>

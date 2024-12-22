@@ -6,8 +6,8 @@ import { useFormik } from "formik";
 import { MyContext } from './MyContext';
 
 function NavBar() {
-  const { user } = useContext(MyContext); 
-
+  const { user, login, logout } = useContext(MyContext); // Ensure this is inside the component function
+  
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [loginError, setLoginError] = useState(''); 
 
@@ -18,10 +18,7 @@ function NavBar() {
     },
     validationSchema: yup.object().shape({
       username: yup.string().required("Must enter a username or email.").max(25),
-      password: yup
-        .string()
-        .required("Must enter a password")
-        .max(25)
+      password: yup.string().required("Must enter a password").max(25)
     }),
     onSubmit: (values) => {
       fetch("/login", {
@@ -36,6 +33,7 @@ function NavBar() {
           if (response.message) {
             setLoginError('');
             setIsDropdownOpen(false);
+            login(response.user); // Pass the user data from the server to the context
           } else if (response.error) {
             setLoginError(response.error);
           }
@@ -44,7 +42,7 @@ function NavBar() {
           console.error("Error:", error);
           setLoginError('An error occurred, please try again.');
         });
-    },
+    }
   });
 
   const handleLogout = () => {
@@ -56,7 +54,8 @@ function NavBar() {
     })
       .then((r) => r.json())
       .then(() => {
-        setIsDropdownOpen(false);  
+        setIsDropdownOpen(false);
+        logout(); // Clear the user state in the context
       })
       .catch((error) => {
         console.error(error);
@@ -83,7 +82,6 @@ function NavBar() {
         
         {/* Login/Logout Dropdown */}
         <div className="relative dropdown">
-  
           <button
             onClick={toggleDropdown}
             className="text-5xl text-white font-semibold hover:text-black transition-all"
