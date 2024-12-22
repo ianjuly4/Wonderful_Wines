@@ -4,18 +4,19 @@ import { MyContext } from "../MyContext";
 import Header from "../Header";
 import UserReviews from "./UserReviews";
 import AddReview from "./AddReview";
+import UserError from "./UserError";
 
 function Reviews() {
-  const { wineId } = useParams(); 
-  const { user, wines } = useContext(MyContext); 
+  const { wineId } = useParams();
+  const { user, wines, setWines, updateWineReviews } = useContext(MyContext);
   const [wine, setWine] = useState(null);
-
-  console.log(wineId)
 
   useEffect(() => {
     const foundWine = wines.find((wine) => wine.id === parseInt(wineId));
     setWine(foundWine);
+    
   }, [wineId, wines]); 
+
 
   const displayStarRating = (rating) => {
     if (typeof rating !== "number") {
@@ -33,61 +34,63 @@ function Reviews() {
     return stars;
   };
 
-  const defaultImage = "https://www.winespectrum.com/wp-content/uploads/2024/12/A1662-1.png"; // Default image if wine image is not available
+  const defaultImage = "https://www.winespectrum.com/wp-content/uploads/2024/12/A1662-1.png";
 
+  // Handle case if the wine is still loading
   if (!wine) {
-    return <div>Loading wine details...</div>; 
+    return <div>Loading wine details...</div>;
   }
 
-  
-  const userReview = wine.reviews?.find((review) => review.user && review.user.id === user.id);
+  // Check if user has already reviewed this wine
+  const userReview = wine.reviews?.find((review) => review.user && review.user.id === user?.id);
 
-  console.log(userReview)
+  const handleReviewUpdate = (updatedReview) => {
+    updateWineReviews(wineId, updatedReview);
+  };
 
   return (
     <div>
       <Header />
       <div className="min-h-screen w-full bg-gradient-to-r from-red-400 to-white flex justify-center items-center">
         <div className="relative bg-white border-4 border-black rounded-lg shadow-lg w-full sm:w-3/4 md:w-3/4 lg:w-3/4 xl:w-3/4 p-8">
-          {/* Wine Image - displayed at the top */}
           <img
             src={wine.image || defaultImage}
             alt={wine.name || "Wine Image"}
             className="mx-auto h-64 object-cover rounded-lg mb-6"
           />
 
-          {/* Content inside the wine card */}
           <div className="text-black">
             <h3 className="font-bold text-2xl mb-3">{wine.name || "Unknown Wine"}</h3>
             <h5 className="text-xl mb-2">{wine.type || "Unknown Type"}</h5>
             <h5 className="text-lg mb-4">Where to Find: {wine.location || "Unknown Location"}</h5>
             <p className="text-sm mb-6">{wine.flavor_profile || "No flavor profile available"}</p>
             
-            {/* Display rating */}
-            <h5
-              className={`text-lg font-semibold mb-2 ${
-                wine.reviews && wine.reviews[0]?.star_review
-                  ? "text-yellow-400"
-                  : "text-black"
-              }`}
-            >
+            <h5 className={`text-lg font-semibold mb-2 ${wine.reviews && wine.reviews[0]?.star_review ? "text-yellow-400" : "text-black"}`}>
               {wine.reviews && wine.reviews[0]?.star_review
                 ? displayStarRating(wine.reviews[0].star_review)
                 : "No rating available"}
             </h5>
 
-            {/* Price */}
             <h5 className="text-lg font-semibold mt-2">
               ${wine.price ? wine.price.toFixed(2) : "Unknown Price"}
             </h5>
 
-            {/* Reviews section */}
             <div className="mt-4">
-              {/* Only show UserReviews if the current user has submitted a review */}
-              {userReview ? (
-                <UserReviews wineId={wineId} displayStarRating={displayStarRating} userReview={userReview} />
+              {/* Conditional rendering based on user state */}
+              {!user ? (
+                <UserError />
+              ) : userReview ? (
+                <UserReviews 
+                  wineId={wineId} 
+                  displayStarRating={displayStarRating} 
+                  userReview={userReview} 
+                  handleReviewUpdate={handleReviewUpdate} 
+                />
               ) : (
-                <AddReview wineId={wineId} />
+                <AddReview 
+                  wineId={wineId} 
+                  handleReviewUpdate={handleReviewUpdate} 
+                />
               )}
             </div>
           </div>

@@ -23,6 +23,22 @@ function UserAccount({ user, logout, wines }) {
     return stars;
   };
 
+  const handleLogout = () => {
+    fetch('/logout', {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((r) => r.json())
+      .then(() => {
+        logout(); 
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
   const usersWines = wines.filter((wine) => {
     const hasReviewByUser = wine.reviews.some(
       (review) => review.user_id === user.id
@@ -50,7 +66,7 @@ function UserAccount({ user, logout, wines }) {
         </h3>
     
         {/* Logout Button */}
-        <button onClick={logout} className="text-xl font-bold text-red-600 mb-6">
+        <button onClick={handleLogout} className="text-xl font-bold text-red-600 mb-6">
           Logout
         </button>
       </div>

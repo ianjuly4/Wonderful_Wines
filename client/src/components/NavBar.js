@@ -1,16 +1,15 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { NavLink } from "react-router-dom";
-import * as yup from "yup";
 import { useFormik } from "formik";
-
+import * as yup from "yup";
 import { MyContext } from './MyContext';
 
 function NavBar() {
-  const { user, login, logout } = useContext(MyContext); // Ensure this is inside the component function
-  
+  const { user, login, logout } = useContext(MyContext);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [loginError, setLoginError] = useState(''); 
+  const [loginError, setLoginError] = useState('');
 
+  // Formik for handling login form
   const formik = useFormik({
     initialValues: {
       username: "",
@@ -33,7 +32,7 @@ function NavBar() {
           if (response.message) {
             setLoginError('');
             setIsDropdownOpen(false);
-            login(response.user); // Pass the user data from the server to the context
+            login(response.user); 
           } else if (response.error) {
             setLoginError(response.error);
           }
@@ -45,41 +44,28 @@ function NavBar() {
     }
   });
 
+  // Toggle dropdown visibility
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  }
+
+  // Handle logout
   const handleLogout = () => {
-    fetch('/logout', {
+    fetch("/logout", {
       method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
     })
-      .then((r) => r.json())
       .then(() => {
-        setIsDropdownOpen(false);
-        logout(); // Clear the user state in the context
+        logout();  // Use logout from context
+        setIsDropdownOpen(false); // Close dropdown after logout
       })
       .catch((error) => {
-        console.error(error);
+        console.error("Error during logout:", error);
       });
-  };
-
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen); 
-  };
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (event.target.closest('.dropdown') === null) {
-        setIsDropdownOpen(false);
-      }
-    };
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
-  }, []);
+  }
 
   return (
     <div className="w-full bg-gradient-to-r from-red-400 to-white flex justify-center items-center h-16">
       <nav className="flex space-x-4">
-        
         {/* Login/Logout Dropdown */}
         <div className="relative dropdown">
           <button
@@ -93,7 +79,6 @@ function NavBar() {
           {!user && isDropdownOpen && (
             <div className="absolute left-0 mt-2 bg-white shadow-lg rounded-md w-72 p-4 z-50">
               <form onSubmit={formik.handleSubmit} className="space-y-4">
-                {/* Username Input */}
                 <div>
                   {loginError && <div className="text-red-500 text-sm">{loginError}</div>}
                   <label htmlFor="username" className="block text-lg font-semibold">
@@ -115,7 +100,6 @@ function NavBar() {
                   )}
                 </div>
 
-                {/* Password Input */}
                 <div>
                   <label htmlFor="password" className="block text-lg font-semibold">
                     Password
@@ -136,7 +120,6 @@ function NavBar() {
                   )}
                 </div>
 
-                {/* Submit Button */}
                 <button
                   type="submit"
                   className="w-full py-2 bg-black text-white rounded-md hover:bg-gray-700 transition-all"
@@ -179,7 +162,7 @@ function NavBar() {
               ? "nav-link text-5xl text-black font-semibold hover:text-black"
               : "nav-link text-5xl text-white font-semibold hover:text-black transition-all"
           }
-          end // 'end' ensures this is matched exactly to the '/wines' route
+          end
         >
           Home
         </NavLink>

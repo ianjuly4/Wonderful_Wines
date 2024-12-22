@@ -34,7 +34,12 @@ function Signup() {
   });
 
   return (
+    <div>
+   <h3 className="text-2xl  flex items-center justify-center font-bold text-gray-800 italic mb-4">
+    Please Log In Or Create An Account
+    </h3>
     <div className="min-h-screen flex items-center justify-center"> {/* Centering the form */}
+  
       <div className="flex flex-col items-center p-6 rounded-lg shadow-lg w-full max-w-md bg-white">
         <h2 className="text-2xl font-semibold mb-6 text-center">Create An Account</h2> {/* Header */}
         
@@ -82,6 +87,7 @@ function Signup() {
           </div>
         </form>
       </div>
+    </div>
     </div>
   );
 }

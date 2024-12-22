@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 
-const MyContext = React.createContext();
+const MyContext = createContext();
 
 function MyContextProvider({ children }) {
   const [user, setUser] = useState(null); 
   const [wines, setWines] = useState([]);
+
 
   useEffect(() => {
     fetch("/check_session")
@@ -22,14 +23,9 @@ function MyContextProvider({ children }) {
         console.error("Error checking session:", error);
         setUser(null); 
       });
-  }, []);
+  }, []); 
 
-  // Fetching wine data on initial load
   useEffect(() => {
-    fetchWines();
-  }, []);
-
-  const fetchWines = () => {
     fetch("/wines", {
       method: "GET",
       headers: {
@@ -43,18 +39,20 @@ function MyContextProvider({ children }) {
       .catch((error) => {
         console.error("Error fetching wines:", error);
       });
-  };
+  }, []); 
 
+  
   const login = (userData) => {
     setUser(userData); 
   };
 
+ 
   const logout = () => {
-    setUser(null);
+    setUser(null); 
   };
 
   return (
-    <MyContext.Provider value={{ user, wines, login, logout, fetchWines }}>
+    <MyContext.Provider value={{ user, wines, setWines, login, logout }}>
       {children}
     </MyContext.Provider>
   );

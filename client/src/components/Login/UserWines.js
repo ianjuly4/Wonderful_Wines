@@ -32,7 +32,7 @@ function AllWines({ wine, displayStarRating }) {
           {/* Display Star Rating or "No reviews yet" */}
           <div className="text-yellow-400 mt-2">
             {star_review !== null
-              ? displayStarRating(star_review) // Display the stars using the passed down function
+              ? displayStarRating(star_review) 
               : "No reviews yet"} {/* Fallback if no reviews are available */}
           </div>
 
