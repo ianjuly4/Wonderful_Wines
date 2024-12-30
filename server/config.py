@@ -1,4 +1,4 @@
-
+import os
 from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
@@ -9,7 +9,8 @@ from sqlalchemy import MetaData
 from sqlalchemy.ext.associationproxy import association_proxy
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
+
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI', 'sqlite:///instance/app.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.json.compact = False
 
@@ -24,3 +25,6 @@ api = Api(app)
 bcrypt = Bcrypt(app)
 
 CORS(app)
+
+
+
