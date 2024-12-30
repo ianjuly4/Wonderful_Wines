@@ -1,20 +1,17 @@
+from dotenv import load_dotenv
+import os
+load_dotenv()  
 from flask import Flask, render_template, request, make_response, session, send_from_directory
 from flask_restful import Api, Resource
 from flask_cors import CORS
 from flask_migrate import Migrate
-from dotenv import load_dotenv
 from models import Wine, Review, User
 from config import app, db, bcrypt
-import os
-
-load_dotenv()
-
 app.secret_key = os.getenv('SECRET_KEY', "b'\x1f\r\xa4\xfa\x1f\x17\xf6?\r\x90@\xb0\x1d\x0c\xbb\xc2'")
-
-CORS(app, origins='http://localhost:3000')  
-
+CORS(app, origins='http://localhost:3000')
 migrate = Migrate(app, db)
 api = Api(app)
+
 
 @app.route('/')
 @app.route('/<path:path>')
