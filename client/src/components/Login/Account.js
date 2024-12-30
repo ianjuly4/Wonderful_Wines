@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext} from "react";
 import { MyContext } from "../MyContext";
 import Signup from "./Signup";
 import UserAccount from "./UserAccount";
-import AllWinesFilter from "../home/AllWinesFilter";
+
 import Header from "../Header"
 
 function Account() {

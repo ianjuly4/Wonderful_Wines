@@ -1,8 +1,8 @@
 import React from "react";
-import UpdateForm from "./UpdateForm";
+
 
 function UpdateWines({ wine, number }) {
-  const { id, name, price, location, image, type, flavor_profile } = wine;
+  const { name, price, location, image, type, flavor_profile } = wine;
 
   const defaultImage = "path_to_default_image.jpg"; 
 

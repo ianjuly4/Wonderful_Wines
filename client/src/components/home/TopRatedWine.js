@@ -3,9 +3,9 @@ import React from "react";
 function TopRatedWine({ displayStarRating, wine }) {
   const { name, type, image, price, reviews } = wine;
   
-  // Assuming each wine has an array of reviews and you're using the first one
-  const review = reviews?.[0] || {}; // Safely access the first review if exists
-  const { star_review, comment } = review;
+ 
+  const review = reviews?.[0] || {}; 
+  const { star_review } = review;
 
   const defaultImage = "path_to_default_image.jpg"; 
 
@@ -25,7 +25,7 @@ function TopRatedWine({ displayStarRating, wine }) {
         <div>
           {/* Display Star Rating */}
           <h5 className="text-lg font-semibold text-yellow-400 mb-2">
-            {displayStarRating(star_review || 0)} {/* Fallback to 0 if star_review is undefined */}
+            {displayStarRating(star_review || 0)} 
           </h5>
 
           {/* Wine Name and Type */}

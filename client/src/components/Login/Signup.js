@@ -1,7 +1,7 @@
-import React, { useContext } from "react";
+import React from "react";
 import * as yup from "yup";
 import { useFormik } from "formik";
-import Header from "../Header";
+
 
 function Signup() {
   const formik = useFormik({

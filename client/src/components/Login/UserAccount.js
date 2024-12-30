@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, {useState} from "react";
 import UserWines from "./UserWines";
 import { NavLink } from "react-router-dom";
-import { MyContext } from "../MyContext";
+
 import AllWinesFilter from "../home/AllWinesFilter";
 
 function UserAccount({ user, logout, wines }) {

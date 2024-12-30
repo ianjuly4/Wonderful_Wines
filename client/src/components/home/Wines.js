@@ -1,7 +1,7 @@
 import React from "react";
 
 function Wines({ wine, displayStarRating }) {
-      const { name, type, image, location, flavor_profile, price } = wine;
+      const { name, type, image, price } = wine;
     
       const defaultImage = "path_to_default_image.jpg"; 
     

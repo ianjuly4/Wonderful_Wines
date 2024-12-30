@@ -5,7 +5,7 @@ import * as yup from "yup";
 import DeleteReview from "./DeleteReview"; 
 
 function UserReviews({ wineId, displayStarRating, userReview }) {
-  const { user, wines, setWines, fetchWines } = useContext(MyContext); 
+  const { user, wines, fetchWines } = useContext(MyContext); 
   const [message, setMessage] = useState("");
 
   const wine = wines.find((wine) => wine.id === parseInt(wineId));
@@ -84,6 +84,7 @@ function UserReviews({ wineId, displayStarRating, userReview }) {
     <div className="wine-detail">
       {/* Render Reviews */}
       <div className="reviews">
+        <h3>{message}</h3>
         <h3>{user.username}'s Review</h3>
         {wineReviews.length > 0 ? (
           wineReviews.map((review) => (

@@ -4,7 +4,7 @@ function DeleteWines({ wine, number, onDelete, }) {
     const { name, price, location, image, type, flavor_profile, reviews } = wine;
     const defaultImage = "path_to_default_image.jpg";
 
-    const starReview = reviews && reviews.length > 0 ? reviews[0].star_review : 0;
+   
 
     return (
         <div

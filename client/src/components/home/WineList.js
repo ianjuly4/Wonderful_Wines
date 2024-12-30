@@ -4,7 +4,6 @@ import RedWineContainer from "./RedWineContainer";
 import WhiteWineContainer from "./WhiteWineContainer";
 import SparklingContainer from "./SparklingContainer";
 import AllWinesContainer from "./AllWinesContainer";
-import WineFilter from "../WineFilter";
 
 function WineList({ wines }) {
 

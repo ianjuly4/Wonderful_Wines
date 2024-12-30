@@ -45,6 +45,7 @@ function AddReview({ wineId }) {
 
   return (
     <div className="p-4 rounded shadow-lg flex flex-col gap-4">
+      <h3>{message}</h3>
       <div className="flex gap-8">
         <div className="flex-1 w-[40%]">
           <input

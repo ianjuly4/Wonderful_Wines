@@ -8,7 +8,7 @@ import UserError from "./UserError";
 
 function Reviews() {
   const { wineId } = useParams();
-  const { user, wines, setWines, updateWineReviews } = useContext(MyContext);
+  const { user, wines, updateWineReviews } = useContext(MyContext);
   const [wine, setWine] = useState(null);
 
   useEffect(() => {
