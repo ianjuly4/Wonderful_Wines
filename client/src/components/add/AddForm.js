@@ -23,7 +23,7 @@ function AddForm({ displayStarRating, user }) {
       name: yup.string().required("Must enter a wine name").max(50),
       type: yup.string().required("Must enter a wine type").max(25),
       location: yup.string().required("Must enter a location").max(25),
-      flavorProfile: yup.string().required("Must enter a flavor profile").max(200),
+      flavorProfile: yup.string().required("Must enter a flavor profile").max(500),
       price: yup.number().positive().integer().required("Must enter a price").typeError("Please enter an Integer").max(200),
       image: yup.string().url("Must be a valid URL").max(200),
       rating: yup.number().positive().integer().required("Must enter a wine rating").typeError("Please enter an integer").max(5),

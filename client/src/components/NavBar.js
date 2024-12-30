@@ -156,7 +156,7 @@ function NavBar() {
         </NavLink>
 
         <NavLink
-          to="/wines"
+          to="/"
           className={({ isActive }) =>
             isActive
               ? "nav-link text-5xl text-black font-semibold hover:text-black"

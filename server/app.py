@@ -1,11 +1,11 @@
-from flask import request, session, make_response, jsonify
+from flask import request, session, make_response
 from flask_restful import Resource
 from config import app, db, Api, CORS, Migrate
 from models import Wine, Review, User
 
 app.secret_key = "b'\x1f\r\xa4\xfa\x1f\x17\xf6?\r\x90@\xb0\x1d\x0c\xbb\xc2'"
 
-CORS(app, origins='http://localhost:3000')
+CORS(app, origins='http://localhost:3000/wines')
 migrate = Migrate(app, db)
 api = Api(app)
 
@@ -15,7 +15,7 @@ class Index(Resource):
         response_dict = {
             "message": "Welcome to the Wonderful Wines RESTful API",
         }
-        response = make_response(jsonify(response_dict), 200)
+        response = make_response((response_dict), 200)
         return response
 
 api.add_resource(Index, '/')
@@ -23,6 +23,7 @@ api.add_resource(Index, '/')
 
 class Wines(Resource):
     def get(self):
+
         wine_dict_list = [wine.to_dict() for wine in Wine.query.all()]
 
         if wine_dict_list:
@@ -31,15 +32,12 @@ class Wines(Resource):
             return({"message": "No Wines Found"}, 404)
 
     def post(self):
-    
+        
         data = request.get_json()
         print("Request Data:", data)
-
-        
         user_id = session.get('user_id')
         if not user_id:
             return make_response({"message": "Unauthorized, Please Login to Continue"}, 401)
-
         else:
             new_wine = Wine(
                 name=data.get('name', ''),
@@ -49,12 +47,9 @@ class Wines(Resource):
                 flavor_profile=data.get('flavorProfile', ''),
                 image=data.get('image')
             )
-
-
             db.session.add(new_wine)
             db.session.commit()
 
-      
             new_review = Review(
                 wine_id=new_wine.id,
                 user_id=user_id,
@@ -62,11 +57,9 @@ class Wines(Resource):
                 comment=data.get('comment','')
 
             )
-
             db.session.add(new_review)
             db.session.commit()
 
-        
             response_data = {
                 "wine": new_wine.to_dict(),
                 "review": new_review.to_dict()
@@ -80,57 +73,39 @@ api.add_resource(Wines, '/wines')
 
 class WinesById(Resource):
     def get(self, id):
-
         response_dict = Wine.query.filter(Wine.id==id).first().to_dict()
-
         response = make_response(
             response_dict,
             200,
         )
-
         return response
-    
     def delete(self, id):
-    
         wine = Wine.query.filter(Wine.id == id).first()
-
         if not wine:
             return make_response({"error": "Wine not found"}, 404)
-
         db.session.delete(wine)
         db.session.commit()
-
         return make_response({"message": "Wine successfully deleted"}, 200)
-
     def patch(self, id):
         data = request.get_json()
         wine = Wine.query.filter(Wine.id == id).first()
         print(data)
-
         if not wine:
             return make_response({"error": "Wine not found"}, 404)
-
         try:
             for attr in data:
                 if hasattr(wine, attr):
                     setattr(wine, attr, data[attr])
-
             db.session.commit()
-
         except Exception as e:
             db.session.rollback()
             return make_response({"error": str(e)}, 400)
-
         response_dict = wine.to_dict()
-
         response = make_response(
             response_dict,
             200
         )
-
         return response
-
-        
 api.add_resource(WinesById, "/wines/<int:id>")
 
 
@@ -286,7 +261,6 @@ class Logout(Resource):
 api.add_resource(Logout, '/logout')
 
 class CheckSession(Resource):
-
     def get(self):
         print(f"Session content: {session}")
         user = User.query.filter(User.id == session.get('user_id')).first()
