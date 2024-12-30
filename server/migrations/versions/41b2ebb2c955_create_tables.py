@@ -1,8 +1,8 @@
-"""models update
+"""create tables
 
-Revision ID: d0d05715e1f4
-Revises: 383fb162f58f
-Create Date: 2024-12-09 20:43:24.043027
+Revision ID: 41b2ebb2c955
+Revises: 
+Create Date: 2024-12-30 13:13:43.520869
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'd0d05715e1f4'
-down_revision = '383fb162f58f'
+revision = '41b2ebb2c955'
+down_revision = None
 branch_labels = None
 depends_on = None
 
@@ -32,7 +32,7 @@ def upgrade():
     sa.Column('flavor_profile', sa.String(), nullable=True),
     sa.Column('location', sa.String(), nullable=True),
     sa.Column('price', sa.Float(), nullable=True),
-    sa.Column('created_at', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
+    sa.Column('created_at', sa.DateTime(), server_default=sa.text('now()'), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
     sa.Column('image', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id')

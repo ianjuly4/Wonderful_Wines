@@ -1,7 +1,6 @@
 from sqlalchemy.orm import validates
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy_serializer import SerializerMixin
-
 from config import db, bcrypt, association_proxy
 
 
@@ -16,8 +15,7 @@ class Wine(db.Model, SerializerMixin):
     flavor_profile = db.Column(db.String)
     location = db.Column(db.String)
     price = db.Column(db.Float)
-    created_at = db.Column(db.DateTime, server_default=db.func.now())
-    updated_at = db.Column(db.DateTime, onupdate=db.func.now())
+    viewed_at = db.Column(db.DateTime, default=None)  
     image = db.Column(db.String)
 
     reviews = db.relationship('Review', back_populates='wine', cascade='all, delete-orphan')
