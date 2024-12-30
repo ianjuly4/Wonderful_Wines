@@ -1,6 +1,6 @@
 from flask import request, session, make_response
 from flask_restful import Resource
-from config import app, db, Api, CORS, Migrate
+from config import app, db, Api, CORS, Migrate, os
 from models import Wine, Review, User
 
 app.secret_key = "b'\x1f\r\xa4\xfa\x1f\x17\xf6?\r\x90@\xb0\x1d\x0c\xbb\xc2'"
