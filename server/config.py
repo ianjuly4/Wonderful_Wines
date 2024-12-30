@@ -9,8 +9,12 @@ from sqlalchemy import MetaData
 from sqlalchemy.ext.associationproxy import association_proxy
 
 
-app = Flask(__name__)
-bcrypt = Bcrypt(app)
+app = Flask(
+    __name__,
+    static_url_path='',
+    static_folder='../client/build', 
+    template_folder='../client/build', 
+)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI', 'sqlite:///instance/app.db')
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'your_secret_key')
@@ -25,7 +29,7 @@ migrate = Migrate(app, db)
 db.init_app(app)
 
 api = Api(app)
-
+bcrypt = Bcrypt(app)
 
 CORS(app)
 

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, make_response, session
+from flask import Flask, render_template, request, make_response, session, send_from_directory
 from flask_restful import Api, Resource
 from flask_cors import CORS
 from flask_migrate import Migrate
@@ -7,39 +7,20 @@ from models import Wine, Review, User
 from config import app, db, bcrypt
 import os
 
-
 load_dotenv()
-
-
-app = Flask(
-    __name__,
-    static_url_path='',
-    static_folder='../client/build',
-    template_folder='../client/build'
-)
-
 
 app.secret_key = os.getenv('SECRET_KEY', "b'\x1f\r\xa4\xfa\x1f\x17\xf6?\r\x90@\xb0\x1d\x0c\xbb\xc2'")
 
-
 CORS(app, origins='http://localhost:3000')  
-
 
 migrate = Migrate(app, db)
 api = Api(app)
 
-
 @app.route('/')
 @app.route('/<path:path>')
 def index(path=None):
-    return render_template('index.html')
 
-
-class Index(Resource):
-    def get(self):
-        return {"message": "Welcome to the Wonderful Wines RESTful API"}, 200
-
-api.add_resource(Index, '/')
+    return send_from_directory(os.path.join(app.static_folder), 'index.html')
 
 
 class Wines(Resource):
