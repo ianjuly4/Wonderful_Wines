@@ -9,7 +9,7 @@ function NavBar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [loginError, setLoginError] = useState('');
 
-  // Formik for handling login form
+
   const formik = useFormik({
     initialValues: {
       username: "",

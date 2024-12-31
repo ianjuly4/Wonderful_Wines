@@ -1,25 +1,18 @@
-from dotenv import load_dotenv
-import os
-load_dotenv()
+#/server/app.py
+
 from flask import Flask, render_template, request, make_response, session, send_from_directory
 from flask_restful import Api, Resource
-from flask_cors import CORS
-from models import Wine, Review, User
-from config import app, db, bcrypt, migrate, api, association_proxy
+from config import app, db, bcrypt, migrate, api, os
+from models import Wine, Review, User  
 
 
-
-app.secret_key = os.getenv('SECRET_KEY', "b'\x1f\r\xa4\xfa\x1f\x17\xf6?\r\x90@\xb0\x1d\x0c\xbb\xc2'")
-
-CORS(app, origins='http://localhost:3000')  
-
-
+# Static route to serve React app's index.html
 @app.route('/')
 @app.route('/<path:path>')
 def index(path=None):
-
     return send_from_directory(os.path.join(app.static_folder), 'index.html')
 
+# Routes and API resources
 
 class Wines(Resource):
     def get(self):
@@ -59,7 +52,6 @@ class Wines(Resource):
 
 api.add_resource(Wines, '/wines')
 
-
 class WinesById(Resource):
     def get(self, id):
         wine = Wine.query.filter(Wine.id == id).first()
@@ -87,7 +79,6 @@ class WinesById(Resource):
         return make_response(wine.to_dict(), 200)
 
 api.add_resource(WinesById, '/wines/<int:id>')
-
 
 class Reviews(Resource):
     def post(self, id):
@@ -146,13 +137,13 @@ class Signup(Resource):
         data = request.get_json()
         if not data:
             return make_response({"message": "Invalid data. No data provided."}, 400)
-        
+
         username = data.get('username')
         password = data.get('password')
-        
+
         if not username or not password:
             return make_response({"message": "Username and password are required."}, 422)
-        
+
         user = User.query.filter(User.username == username).first()
         if user:
             return make_response({"message": "Username already taken."}, 422)
@@ -172,18 +163,26 @@ class Login(Resource):
         data = request.get_json()
         username = data.get('username')
         password = data.get('password')
-        
+
+        print(f"Login attempt for username: {username}")
+        print(f"Password entered: {password}")  
+
         user = User.query.filter(User.username == username).first()
-        
-        if user and user.authenticate(password):  
-            session['user_id'] = user.id
-            return make_response({'message': 'Login successful', 'user': user.to_dict()}, 200)
+
+        if user:
+            print(f"User found: {user.username}")
+            if user.authenticate(password):
+                session['user_id'] = user.id
+                return make_response({'message': 'Login successful', 'user': user.to_dict()}, 200)
+            else:
+                print(f"Password mismatch for user {username}")
+        else:
+            print(f"User not found: {username}")
         
         return make_response({'error': 'Invalid username or password'}, 401)
 
-
-
-api.add_resource(Login, '/login')
+    
+api.add_resource(Login, '/login')    
 
 class Logout(Resource):
     def delete(self):
@@ -191,7 +190,6 @@ class Logout(Resource):
         return make_response({'message': 'Logged out successfully'}, 200)
 
 api.add_resource(Logout, '/logout')
-
 
 class CheckSession(Resource):
     def get(self):
