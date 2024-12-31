@@ -60,7 +60,6 @@ class Wines(Resource):
 api.add_resource(Wines, '/wines')
 
 
-
 class WinesById(Resource):
     def get(self, id):
         wine = Wine.query.filter(Wine.id == id).first()
@@ -88,7 +87,6 @@ class WinesById(Resource):
         return make_response(wine.to_dict(), 200)
 
 api.add_resource(WinesById, '/wines/<int:id>')
-
 
 
 class Reviews(Resource):
@@ -143,8 +141,6 @@ class Reviews(Resource):
 
 api.add_resource(Reviews, '/reviews/<int:id>')
 
-
-
 class Signup(Resource):
     def post(self):
         data = request.get_json()
@@ -171,8 +167,6 @@ class Signup(Resource):
 
 api.add_resource(Signup, "/signup")
 
-
-
 class Login(Resource):
     def post(self):
         data = request.get_json()
@@ -181,15 +175,15 @@ class Login(Resource):
         
         user = User.query.filter(User.username == username).first()
         
-        if user and bcrypt.check_password_hash(user.password_hash, password):
+        if user and user.authenticate(password):  
             session['user_id'] = user.id
             return make_response({'message': 'Login successful', 'user': user.to_dict()}, 200)
         
         return make_response({'error': 'Invalid username or password'}, 401)
 
+
+
 api.add_resource(Login, '/login')
-
-
 
 class Logout(Resource):
     def delete(self):
@@ -197,7 +191,6 @@ class Logout(Resource):
         return make_response({'message': 'Logged out successfully'}, 200)
 
 api.add_resource(Logout, '/logout')
-
 
 
 class CheckSession(Resource):
