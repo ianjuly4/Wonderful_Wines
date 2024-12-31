@@ -43,7 +43,8 @@ class User(db.Model, SerializerMixin):
     username = db.Column(db.String, unique=True)
     _password_hash = db.Column(db.String, nullable=False)
 
-    articles = db.relationship('Article', backref='user')
+    reviews = db.relationship('Review', back_populates='user', cascade='all, delete-orphan')
+    wines = association_proxy('reviews', 'wine', creator=lambda wine_obj: Review(wine=wine_obj))
 
     @hybrid_property
     def password_hash(self):

@@ -23,11 +23,6 @@ app = Flask(
 # Set app configurations
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI', 'sqlite:///instance/app.db')
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', b'9\x8c_\xc8\x16$OE\xbe5\x98d\x19\xc1\xd8(')
-app.config['SESSION_COOKIE_NAME'] = 'session' 
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SESSION_COOKIE_SECURE'] = True  
-app.config['SESSION_COOKIE_HTTPONLY'] = True  
-app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'  
 app.json.compact = False
 
 # Initialize SQLAlchemy
