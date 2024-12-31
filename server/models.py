@@ -44,7 +44,6 @@ class User(db.Model, SerializerMixin):
     _password_hash = db.Column(db.String, nullable=False)
 
     reviews = db.relationship('Review', back_populates='user', cascade='all, delete-orphan')
-    
     wines = association_proxy('reviews', 'wine', creator=lambda wine_obj: Review(wine=wine_obj))
 
     @validates('username')

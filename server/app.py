@@ -144,12 +144,14 @@ class Signup(Resource):
         if not username or not password:
             return make_response({"message": "Username and password are required."}, 422)
 
+      
         user = User.query.filter(User.username == username).first()
         if user:
             return make_response({"message": "Username already taken."}, 422)
 
+      
         new_user = User(username=username)
-        new_user.password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
+        new_user.password_hash = password 
 
         db.session.add(new_user)
         db.session.commit()
@@ -180,6 +182,7 @@ class Login(Resource):
             print(f"User not found: {username}")
         
         return make_response({'error': 'Invalid username or password'}, 401)
+
 
     
 api.add_resource(Login, '/login')    
