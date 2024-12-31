@@ -29,7 +29,7 @@ function AddReview({ wineId }) {
       })
         .then((result) => {
           if (result.ok) {
-            setMessage("Wine added successfully!");
+            setMessage("Wine Review added successfully!");
           } else {
             result.json().then((data) => {
               setMessage(data.message || "An error occurred, please try again.");

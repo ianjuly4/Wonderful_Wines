@@ -13,7 +13,7 @@ function UserReviews({ wineId, displayStarRating, userReview }) {
   const wineReviews = wine ? wine.reviews : [];
   console.log(userReview.id)
   console.log(wineId)
-
+  console.log(`username${user}`)
   
   const handleDeleteReview = (reviewId) => {
     fetch(`/reviews/${reviewId}`, {
