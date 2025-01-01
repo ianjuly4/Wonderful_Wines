@@ -9,28 +9,34 @@ if __name__ == '__main__':
     with app.app_context():
         print("Starting seed...")
 
-        # Optionally, clear existing data
-        Wine.query.delete()
+        # Remove all reviews first (to avoid foreign key issues)
         Review.query.delete()
-        User.query.delete()
+
+        # Now delete the wines (which will delete their associated reviews due to cascade)
+        Wine.query.delete()
+
+        # Optionally, delete users (if needed)
+        ##User.query.delete()
 
         # Create user instances
+        """
         users = [
-            User(username='Meredith2692'),  
-            User(username='Kiana92')        
+            User(username='Meredith2692'),
+            User(username='Kiana92')
         ]
-    
+
+        # Set passwords for the users
         users[0].password_hash = hash_password('password123')
         users[1].password_hash = hash_password('securepassword')
 
-        db.session.add_all(users)   
+        db.session.add_all(users)
         db.session.commit()
 
-     
         meredith = users[0]
         kiana = users[1]
-
-        # Seed wine data
+        """
+       # Seed wine data
+        
         wines = [
             Wine(
                 name='Shafer TD-9',
@@ -96,53 +102,52 @@ if __name__ == '__main__':
                 image='https://www.winespectrum.com/wp-content/uploads/2024/12/S8374-1.png'
             ),
         ]
-       
-        # Add wines to session and commit
-        db.session.add_all(wines)
-        db.session.commit()
 
-        # Seed reviews
+        db.session.add_all(wines)
+        db.session.commit()  # Commit wines first to ensure they are saved and have valid IDs
+
+        # Seed reviews (make sure the wine_id corresponds to the correct wine)
+        """
         reviews = [
             Review(
                 star_review=2,
                 comment="Great Wine but hard to come by",
-                wine_id=4,
-                user_id=meredith.id  
+                wine_id=4,  # Wine ID for 'The Paring' (which is the 4th wine)
+            
             ),
             Review(
                 star_review=4,
                 comment="A great chardonnay for a great price",
-                wine_id=2,
-                user_id=meredith.id 
+                wine_id=2,  # Wine ID for '2022 Auteur Sonoma Coast' (which is the 2nd wine)
+             
             ),
             Review(
                 star_review=4,
                 comment="Great Wine but hard to come by",
-                wine_id=3,
-                user_id=meredith.id 
+                wine_id=3,  # Wine ID for 'NV Ayala ‘Majeur’ Brut' (which is the 3rd wine)
+            
             ),
             Review(
                 star_review=3,
                 comment="Great wine for a great price",
-                wine_id=5,
-                user_id=meredith.id 
+                wine_id=5,  # Wine ID for 'Merry Edwards' (which is the 5th wine)
+           
             ),
             Review(
                 star_review=4,
                 comment="yum! a great wine for a great price",
-                wine_id=1,
-                user_id=meredith.id 
+                wine_id=1,  # Wine ID for 'Shafer TD-9' (which is the 1st wine)
+            
             ),
             Review(
                 star_review=3,
                 comment="I love this wine! Would recommend",
-                wine_id=7,
-                user_id=kiana.id  
+                wine_id=7,  # Wine ID for 'Sixteen by Twenty' (which is the 7th wine)
+               
             )
         ]
 
-        # Add reviews to session and commit
         db.session.add_all(reviews)
-        db.session.commit()
-
+        db.session.commit()  # Commit reviews after wines are successfully committed
+            """
         print("Seeding completed.")

@@ -55,8 +55,8 @@ function NavBar() {
       method: "DELETE",
     })
       .then(() => {
-        logout();  // Use logout from context
-        setIsDropdownOpen(false); // Close dropdown after logout
+        logout();  
+        setIsDropdownOpen(false); 
       })
       .catch((error) => {
         console.error("Error during logout:", error);

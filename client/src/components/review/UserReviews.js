@@ -4,17 +4,13 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import DeleteReview from "./DeleteReview"; 
 
-function UserReviews({ wineId, displayStarRating, userReview }) {
+function UserReviews({ wineId, displayStarRating, userReview, handleReviewUpdate }) {
   const { user, wines, fetchWines } = useContext(MyContext); 
   const [message, setMessage] = useState("");
 
   const wine = wines.find((wine) => wine.id === parseInt(wineId));
-
   const wineReviews = wine ? wine.reviews : [];
-  console.log(userReview.id)
-  console.log(wineId)
-  console.log(`username${user}`)
-  
+
   const handleDeleteReview = (reviewId) => {
     fetch(`/reviews/${reviewId}`, {
       method: "DELETE",
@@ -25,7 +21,6 @@ function UserReviews({ wineId, displayStarRating, userReview }) {
       .then((response) => {
         if (response.ok) {
           setMessage("Review deleted successfully!");
-         
           fetchWines();
         } else {
           response.json().then((data) => {
@@ -40,8 +35,8 @@ function UserReviews({ wineId, displayStarRating, userReview }) {
 
   const formik = useFormik({
     initialValues: {
-      star_review: "",
-      comment: ""
+      star_review: userReview.star_review || "",
+      comment: userReview.comment || "",
     },
     validationSchema: yup.object().shape({
       star_review: yup.number().positive().integer().required("Must enter a wine rating").typeError("Please enter an integer").max(5),
@@ -74,7 +69,7 @@ function UserReviews({ wineId, displayStarRating, userReview }) {
       });
       formik.resetForm();
     }
-  })    
+  });
 
   if (!wine) {
     return <div>Wine not found!</div>;
@@ -82,51 +77,29 @@ function UserReviews({ wineId, displayStarRating, userReview }) {
 
   return (
     <div className="wine-detail">
-      {/* Render Reviews */}
       <div className="reviews">
         <h3>{message}</h3>
         <h3>{user.username}'s Review</h3>
-        {wineReviews.length > 0 ? (
-          wineReviews.map((review) => (
-            <div
-              key={review.id}
-              className="review flex justify-between border p-4 rounded-lg shadow-md mb-4"
-              style={{
-                border: "2px solid #ddd",
-                padding: "16px",
-                borderRadius: "8px",
-                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                marginBottom: "16px",
-              }}
-            >
-              {/* Left side: review content */}
-              <div className="flex-1">
-                <p>
-                  <strong>{review.user ? review.user.name : "Anonymous"}</strong>
-                </p>
+        <div
+          key={userReview.id}
+          className="review flex justify-between border p-4 rounded-lg shadow-md mb-4"
+        >
+          {/* Left side: review content */}
+          <div className="flex-1">
+            <p>
+              <strong>{userReview.user ? userReview.user.name : "Anonymous"}</strong>
+            </p>
+            <h5 className={`text-lg font-semibold mb-2 ${userReview.star_review ? "text-yellow-400" : "text-black"}`}>
+              {displayStarRating(userReview.star_review) || "No rating available"}
+            </h5>
+            <p>{userReview.comment}</p>
+          </div>
 
-                <h5
-                  className={`text-lg font-semibold mb-2 ${
-                    review.star_review ? "text-yellow-400" : "text-black"
-                  }`}
-                >
-                  {displayStarRating(review.star_review) || "No rating available"}
-                </h5>
-
-                <p>{review.comment}</p>
-              </div>
-
-              {/* Right side: Delete button */}
-              <div className="ml-4">
-                {review.user && review.user.id === user.id && (
-                  <DeleteReview reviewId={review.id} onDelete={handleDeleteReview} />
-                )}
-              </div>
-            </div>
-          ))
-        ) : (
-          <p>No reviews available for this wine.</p>
-        )}
+          {/* Right side: Delete button */}
+          <div className="ml-4">
+            <DeleteReview reviewId={userReview.id} onDelete={handleDeleteReview} />
+          </div>
+        </div>
       </div>
 
       {/* Update Review Form */}
@@ -147,7 +120,7 @@ function UserReviews({ wineId, displayStarRating, userReview }) {
             )}
 
             <input
-              type="text"
+              type="number"
               name="star_review"
               placeholder="Update Wine Review Rating"
               value={formik.values.star_review}

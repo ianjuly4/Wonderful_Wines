@@ -14,9 +14,7 @@ function Reviews() {
   useEffect(() => {
     const foundWine = wines.find((wine) => wine.id === parseInt(wineId));
     setWine(foundWine);
-
-  }, [wineId, wines]); 
-
+  }, [wineId, wines]);
 
   const displayStarRating = (rating) => {
     if (typeof rating !== "number") {
@@ -36,13 +34,12 @@ function Reviews() {
 
   const defaultImage = "https://www.winespectrum.com/wp-content/uploads/2024/12/A1662-1.png";
 
-  
   if (!wine) {
     return <div>Loading wine details...</div>;
   }
 
-
-  const userReview = wine.reviews?.find((review) => review.user && review.user.id === user?.id);
+  // Check if the logged-in user has already reviewed this wine
+  const userReview = wine.reviews?.find((review) => review.user.id === user?.id);
 
   const handleReviewUpdate = (updatedReview) => {
     updateWineReviews(wineId, updatedReview);
