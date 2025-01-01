@@ -41,18 +41,32 @@ function MyContextProvider({ children }) {
       });
   }, []); 
 
-  
+  // Function to update a wine's review in the global state
+  const updateWineReviewInState = (wineId, updatedReview) => {
+    setWines((prevWines) => {
+      return prevWines.map((wine) => {
+        if (wine.id === wineId) {
+          // Update the reviews array with the updated review
+          const updatedReviews = wine.reviews.map((review) =>
+            review.id === updatedReview.id ? updatedReview : review
+          );
+          return { ...wine, reviews: updatedReviews };
+        }
+        return wine;
+      });
+    });
+  };
+
   const login = (userData) => {
     setUser(userData); 
   };
 
- 
   const logout = () => {
     setUser(null); 
   };
 
   return (
-    <MyContext.Provider value={{ user, wines, setWines, login, logout }}>
+    <MyContext.Provider value={{ user, wines, setWines, login, logout, updateWineReviewInState }}>
       {children}
     </MyContext.Provider>
   );

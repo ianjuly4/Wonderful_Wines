@@ -1,11 +1,11 @@
 import React, { useContext, useState } from "react";
-import { MyContext } from "../MyContext"; 
+import { MyContext } from "../MyContext"; // Import the context
 import { useFormik } from "formik";
 import * as yup from "yup";
 import DeleteReview from "./DeleteReview"; 
 
 function UserReviews({ wineId, displayStarRating, userReview, handleReviewUpdate }) {
-  const { user, wines, fetchWines } = useContext(MyContext); 
+  const { user, wines, fetchWines, updateWineReviewInState } = useContext(MyContext); 
   const [message, setMessage] = useState("");
 
   const wine = wines.find((wine) => wine.id === parseInt(wineId));
@@ -21,7 +21,7 @@ function UserReviews({ wineId, displayStarRating, userReview, handleReviewUpdate
       .then((response) => {
         if (response.ok) {
           setMessage("Review deleted successfully!");
-          fetchWines();
+          fetchWines();  // Refresh the list of wines and reviews
         } else {
           response.json().then((data) => {
             setMessage(data.message || "An error occurred, please try again.");
@@ -43,8 +43,8 @@ function UserReviews({ wineId, displayStarRating, userReview, handleReviewUpdate
       comment: yup.string().required("Must enter a review comment").max(50),
     }),
     onSubmit: (values) => {
-      console.log("Submitting review:", values); 
-    
+      console.log("Submitting updated review:", values); 
+
       fetch(`/reviews/${userReview.id}`, {
         method: "PATCH",
         headers: {
@@ -58,6 +58,15 @@ function UserReviews({ wineId, displayStarRating, userReview, handleReviewUpdate
       .then((result) => {
         if (result.ok) {
           setMessage("Review updated successfully!");
+
+          // Create the updated review object
+          const updatedReview = { ...userReview, ...values };
+
+          // Send the updated review to the context to update global state
+          updateWineReviewInState(wineId, updatedReview);
+
+          // Reset the form after successful update
+          formik.resetForm();
         } else {
           result.json().then((data) => {
             setMessage(data.message || "An error occurred, please try again.");
@@ -67,7 +76,6 @@ function UserReviews({ wineId, displayStarRating, userReview, handleReviewUpdate
       .catch((error) => {
         setMessage("An unexpected error occurred.");
       });
-      formik.resetForm();
     }
   });
 

@@ -38,7 +38,6 @@ function Reviews() {
     return <div>Loading wine details...</div>;
   }
 
-  // Check if the logged-in user has already reviewed this wine
   const userReview = wine.reviews?.find((review) => review.user.id === user?.id);
 
   const handleReviewUpdate = (updatedReview) => {
