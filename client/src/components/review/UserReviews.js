@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { MyContext } from "../MyContext"; // Import the context
+import { MyContext } from "../MyContext"; 
 import { useFormik } from "formik";
 import * as yup from "yup";
 import DeleteReview from "./DeleteReview"; 
@@ -9,7 +9,7 @@ function UserReviews({ wineId, displayStarRating, userReview, handleReviewUpdate
   const [message, setMessage] = useState("");
 
   const wine = wines.find((wine) => wine.id === parseInt(wineId));
-  const wineReviews = wine ? wine.reviews : [];
+ 
 
   const handleDeleteReview = (reviewId) => {
     fetch(`/reviews/${reviewId}`, {
@@ -21,7 +21,7 @@ function UserReviews({ wineId, displayStarRating, userReview, handleReviewUpdate
       .then((response) => {
         if (response.ok) {
           setMessage("Review deleted successfully!");
-          fetchWines();  // Refresh the list of wines and reviews
+          fetchWines();  
         } else {
           response.json().then((data) => {
             setMessage(data.message || "An error occurred, please try again.");
@@ -59,13 +59,12 @@ function UserReviews({ wineId, displayStarRating, userReview, handleReviewUpdate
         if (result.ok) {
           setMessage("Review updated successfully!");
 
-          // Create the updated review object
+       
           const updatedReview = { ...userReview, ...values };
 
-          // Send the updated review to the context to update global state
           updateWineReviewInState(wineId, updatedReview);
 
-          // Reset the form after successful update
+     
           formik.resetForm();
         } else {
           result.json().then((data) => {
