@@ -17,7 +17,7 @@ function Account() {
       <Header user={user} />
 
 
-      {/* Render different views based on user authentication */}
+  
       {user ? (
         <UserAccount user={user} logout={logout} wines={wines} />
       ) : (

@@ -3,7 +3,7 @@ import React from "react";
 function AllWines({ wine, displayStarRating }) {
   const { name, type, image, location, flavor_profile, price, reviews } = wine;
   
-  // If there are reviews, grab the star rating from the first review
+
   const star_review = reviews && reviews.length > 0 ? reviews[0].star_review : null;
 
   const defaultImage = "path_to_default_image.jpg"; 
@@ -32,8 +32,8 @@ function AllWines({ wine, displayStarRating }) {
           {/* Display Star Rating or "No reviews yet" */}
           <div className="text-yellow-400 mt-2">
             {star_review !== null
-              ? displayStarRating(star_review) // Display the stars using the passed down function
-              : "No reviews yet"} {/* Fallback if no reviews are available */}
+              ? displayStarRating(star_review) 
+              : "No reviews yet"}
           </div>
 
           <h5 className="text-lg font-semibold mt-2">

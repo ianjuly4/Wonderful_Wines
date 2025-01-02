@@ -6,7 +6,7 @@ function MyContextProvider({ children }) {
   const [user, setUser] = useState(null);
   const [wines, setWines] = useState([]);
 
-  // Check session on initial load
+
   useEffect(() => {
     fetch("/check_session")
       .then((response) => {
@@ -25,7 +25,7 @@ function MyContextProvider({ children }) {
       });
   }, []);
 
-  // Fetch wines data
+
   useEffect(() => {
     fetch("/wines")
       .then((r) => r.json())
@@ -37,7 +37,6 @@ function MyContextProvider({ children }) {
       });
   }, []);
 
-  // Login action to handle fetch and set user state
   const login = (userData) => {
     fetch("/login", {
       method: "POST",
@@ -59,7 +58,6 @@ function MyContextProvider({ children }) {
       });
   };
 
-  // Logout action to handle fetch and clear user state
   const logout = () => {
     fetch("/logout", {
       method: "DELETE",

@@ -10,7 +10,7 @@ function SparklingContainer({ displayStarRating, wines }) {
     (wine) => wine.type.toLowerCase() === "sparkling/champagne"
   );
 
-  // Slice the filtered sparkling wines for pagination
+
   const visibleWines = sparklingWines.slice(currentIndex, currentIndex + 4);
 
   const scrollRight = () => {

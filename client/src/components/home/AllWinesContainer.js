@@ -49,7 +49,7 @@ function AllWinesContainer({ displayStarRating, wines }) {
       <div className="wine-list grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {filteredWines.map((wine) => (
           <div key={wine.id} className="wine-card-container">
-            {/* Wrap each wine card with NavLink to navigate to wine details page */}
+           
             <NavLink to={`/wines/${wine.id}`} className="block">
               <AllWines wine={wine} displayStarRating={displayStarRating} />
             </NavLink>

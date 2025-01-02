@@ -15,7 +15,7 @@ if __name__ == '__main__':
         # Now delete the wines (which will delete their associated reviews due to cascade)
         Wine.query.delete()
 
-        # Optionally, delete users (if needed)
+       
         ##User.query.delete()
 
         # Create user instances
@@ -104,9 +104,9 @@ if __name__ == '__main__':
         ]
 
         db.session.add_all(wines)
-        db.session.commit()  # Commit wines first to ensure they are saved and have valid IDs
+        db.session.commit()  
 
-        # Seed reviews (make sure the wine_id corresponds to the correct wine)
+      
         """
         reviews = [
             Review(

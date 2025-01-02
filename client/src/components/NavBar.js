@@ -24,7 +24,7 @@ function NavBar() {
     }
   });
 
-  // Toggle dropdown visibility
+
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };

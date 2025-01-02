@@ -6,13 +6,13 @@ from config import app, db, bcrypt, migrate, api, os
 from models import Wine, Review, User  
 
 
-# Static route to serve React app's index.html
+
 @app.route('/')
 @app.route('/<path:path>')
 def index(path=None):
     return send_from_directory(os.path.join(app.static_folder), 'index.html')
 
-# Routes and API resources
+
 
 class Wines(Resource):
     def get(self):

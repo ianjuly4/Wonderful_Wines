@@ -5,7 +5,7 @@ import { NavLink } from "react-router-dom";
 function RedWineContainer({ displayStarRating, wines }) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Red wine types array
+ 
   const redWineTypes = [
     "merlot",
     "cabernet sauvignon",
