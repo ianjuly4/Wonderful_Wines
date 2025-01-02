@@ -7,8 +7,7 @@ import { MyContext } from './MyContext';
 function NavBar() {
   const { user, login, logout } = useContext(MyContext);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [loginError, setLoginError] = useState('');
-
+ 
 
   const formik = useFormik({
     initialValues: {
@@ -20,48 +19,15 @@ function NavBar() {
       password: yup.string().required("Must enter a password").max(25)
     }),
     onSubmit: (values) => {
-      fetch("/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      })
-        .then((r) => r.json())
-        .then((response) => {
-          if (response.message) {
-            setLoginError('');
-            setIsDropdownOpen(false);
-            login(response.user); 
-          } else if (response.error) {
-            setLoginError(response.error);
-          }
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          setLoginError('An error occurred, please try again.');
-        });
+      
+      login(values); 
     }
   });
 
   // Toggle dropdown visibility
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
-  }
-
-  // Handle logout
-  const handleLogout = () => {
-    fetch("/logout", {
-      method: "DELETE",
-    })
-      .then(() => {
-        logout();  
-        setIsDropdownOpen(false); 
-      })
-      .catch((error) => {
-        console.error("Error during logout:", error);
-      });
-  }
+  };
 
   return (
     <div className="w-full bg-gradient-to-r from-red-400 to-white flex justify-center items-center h-16">
@@ -80,7 +46,7 @@ function NavBar() {
             <div className="absolute left-0 mt-2 bg-white shadow-lg rounded-md w-72 p-4 z-50">
               <form onSubmit={formik.handleSubmit} className="space-y-4">
                 <div>
-                  {loginError && <div className="text-red-500 text-sm">{loginError}</div>}
+                 
                   <label htmlFor="username" className="block text-lg font-semibold">
                     Username
                   </label>
@@ -134,7 +100,10 @@ function NavBar() {
           {user && isDropdownOpen && (
             <div className="absolute left-0 mt-2 bg-white shadow-lg rounded-md w-72 p-4 z-50">
               <button
-                onClick={handleLogout}
+                onClick={() => {
+                  logout();
+                  setIsDropdownOpen(false);
+                }}
                 className="mt-2 w-full py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-all"
               >
                 Logout

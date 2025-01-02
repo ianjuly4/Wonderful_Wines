@@ -3,10 +3,10 @@ import React, { createContext, useState, useEffect } from 'react';
 const MyContext = createContext();
 
 function MyContextProvider({ children }) {
-  const [user, setUser] = useState(null); 
+  const [user, setUser] = useState(null);
   const [wines, setWines] = useState([]);
 
-
+  // Check session on initial load
   useEffect(() => {
     fetch("/check_session")
       .then((response) => {
@@ -23,15 +23,11 @@ function MyContextProvider({ children }) {
         console.error("Error checking session:", error);
         setUser(null); 
       });
-  }, []); 
+  }, []);
 
+  // Fetch wines data
   useEffect(() => {
-    fetch("/wines", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
+    fetch("/wines")
       .then((r) => r.json())
       .then((wineData) => {
         setWines(wineData);
@@ -39,34 +35,45 @@ function MyContextProvider({ children }) {
       .catch((error) => {
         console.error("Error fetching wines:", error);
       });
-  }, []); 
+  }, []);
 
-  // Function to update a wine's review in the global state
-  const updateWineReviewInState = (wineId, updatedReview) => {
-    setWines((prevWines) => {
-      return prevWines.map((wine) => {
-        if (wine.id === wineId) {
-          // Update the reviews array with the updated review
-          const updatedReviews = wine.reviews.map((review) =>
-            review.id === updatedReview.id ? updatedReview : review
-          );
-          return { ...wine, reviews: updatedReviews };
-        }
-        return wine;
-      });
-    });
-  };
-
+  // Login action to handle fetch and set user state
   const login = (userData) => {
-    setUser(userData); 
+    fetch("/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.user) {
+          setUser(data.user); 
+        } else {
+          throw new Error(data.error || 'Login failed');
+        }
+      })
+      .catch((error) => {
+        console.error("Login Error:", error);
+      });
   };
 
+  // Logout action to handle fetch and clear user state
   const logout = () => {
-    setUser(null); 
+    fetch("/logout", {
+      method: "DELETE",
+    })
+      .then(() => {
+        setUser(null); 
+      })
+      .catch((error) => {
+        console.error("Logout Error:", error);
+      });
   };
 
   return (
-    <MyContext.Provider value={{ user, wines, setWines, login, logout, updateWineReviewInState }}>
+    <MyContext.Provider value={{ user, wines, setWines, login, logout }}>
       {children}
     </MyContext.Provider>
   );

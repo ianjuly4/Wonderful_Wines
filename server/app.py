@@ -167,7 +167,6 @@ class Login(Resource):
         password = data.get('password')
 
         print(f"Login attempt for username: {username}")
-        print(f"Password entered: {password}")  
 
         user = User.query.filter(User.username == username).first()
 

@@ -8,6 +8,7 @@ function Add() {
   const { user } = useContext(MyContext);  
 
   
+  
   const displayStarRating = (rating) => {
     let fullStars = Math.floor(rating);
     let halfStars = rating % 1 >= 0.5 ? 1 : 0;

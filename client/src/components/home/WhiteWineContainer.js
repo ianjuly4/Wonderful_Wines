@@ -49,7 +49,7 @@ function WhiteWineContainer({ displayStarRating, wines }) {
         <div className="wine-container flex overflow-hidden space-x-4">
           {visibleWines.map((wine, index) => (
             <NavLink to={`/wines/${wine.id}`} className="block">
-              <Wines wine={wine} displayStarRating={displayStarRating} />
+              <Wines key={wine.id}wine={wine} displayStarRating={displayStarRating} />
             </NavLink>
           ))}
         </div>
