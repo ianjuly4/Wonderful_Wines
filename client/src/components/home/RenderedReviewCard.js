@@ -1,7 +1,7 @@
 
 import React from "react";
 
-const RenderedReviewCard = ({ review }) => {
+const RenderedReviewCard = ({ review, deleteReview }) => {
 
   const displayStarRating = (rating) => {
     let fullStars = Math.floor(rating); 

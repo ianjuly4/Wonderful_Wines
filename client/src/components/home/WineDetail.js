@@ -8,12 +8,8 @@ import RenderedReviewCard from "./RenderedReviewCard";
 function WineDetail() {
   const { wineId } = useParams();
   const { wines } = useContext(MyContext); 
-  const [wine, setWine] = useState(null);
 
-  useEffect(() => {
-    const foundWine = wines.find((wine) => wine.id === parseInt(wineId));
-    setWine(foundWine);
-  }, [wineId, wines]);
+  const wine = wines.find((wine) => wine.id === parseInt(wineId));
 
   const displayStarRating = (rating) => {
     if (typeof rating !== "number") {
@@ -71,7 +67,7 @@ function WineDetail() {
               </NavLink>
               {wine.reviews && wine.reviews.length > 0 ? (
                 wine.reviews.map((review) => (
-                  <RenderedReviewCard key={review.id} review={review} />
+                  <RenderedReviewCard key={review.id} review={review}  />
                 ))
               ) : (
                 <p>No reviews yet for this wine</p>

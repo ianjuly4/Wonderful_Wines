@@ -1,10 +1,11 @@
 import React from "react";
 
-function AllWines({ wine, displayStarRating }) {
-  const { name, type, image, location, flavor_profile, price, reviews } = wine;
-  
+function UserWines({ review, displayStarRating, wine }) {
+  const { comment, star_review } = review;
+  const {image, name, flavor_profile, type, price, location} = wine
 
-  const star_review = reviews && reviews.length > 0 ? reviews[0].star_review : null;
+
+  //const starReview = review && review.length > 0 ? review[0].star_review : null;
 
   const defaultImage = "path_to_default_image.jpg"; 
 
@@ -45,4 +46,4 @@ function AllWines({ wine, displayStarRating }) {
   );
 }
 
-export default AllWines;
+export default UserWines;

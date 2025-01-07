@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
+import { MyContext } from "../MyContext";
 
 function AddReview({ wineId }) {
   const [message, setMessage] = useState('');
-
+  const { user, setUser } = useContext(MyContext);  
 
   const formik = useFormik({
     initialValues: {
@@ -16,20 +17,29 @@ function AddReview({ wineId }) {
       comment: yup.string().required("Must enter a review comment").max(50),
     }),
     onSubmit: (values) => {
-     
-      fetch(`/reviews/${wineId}`, {
+      fetch("/reviews", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          star_review: values.star_review,  
-          comment: values.comment,  
+          star_review: values.star_review,
+          comment: values.comment,
+          wine_id: wineId,
         }),
       })
         .then((result) => {
           if (result.ok) {
             setMessage("Wine Review added successfully!");
+            
+            
+            result.json().then((newReview) => {
+              const updatedUser = {
+                ...user,
+                reviews: [...user.reviews, newReview]  
+              };
+              setUser(updatedUser); 
+            });
           } else {
             result.json().then((data) => {
               setMessage(data.message || "An error occurred, please try again.");
@@ -39,7 +49,8 @@ function AddReview({ wineId }) {
         .catch((error) => {
           setMessage("An unexpected error occurred.");
         });
-      formik.resetForm();
+
+      formik.resetForm(); // Reset the form after submission
     },
   });
 

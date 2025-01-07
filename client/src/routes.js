@@ -6,7 +6,7 @@ import WineDetail from "./components/home/WineDetail";
 
 const routes = [
   {
-    path: "/users",  
+    path: "/auth/login",  
     element: <Account />,
   },
   {
@@ -14,7 +14,7 @@ const routes = [
     element: <Home />,
   },
   {
-    path: "/wines/new",
+    path: "/wines",
     element: <Add />,
   },
  

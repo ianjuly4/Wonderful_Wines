@@ -7,7 +7,17 @@ function AddForm({ displayStarRating, user }) {
   const [message, setMessage] = useState("");  
   const [isUserNotLoggedIn, setIsUserNotLoggedIn] = useState(false);
 
-
+ const formSchema =
+ yup.object().shape({
+  name: yup.string().required("Must enter a wine name").max(50),
+  type: yup.string().required("Must enter a wine type").max(25),
+  location: yup.string().required("Must enter a location").max(25),
+  flavorProfile: yup.string().required("Must enter a flavor profile").max(500),
+  price: yup.number().positive().integer().required("Must enter a price").typeError("Please enter an Integer").max(200),
+  image: yup.string().url("Must be a valid URL").max(200),
+  rating: yup.number().positive().integer().required("Must enter a wine rating").typeError("Please enter an integer").max(5),
+  comment: yup.string().required("Must enter a review comment").max(50),
+})
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -19,16 +29,7 @@ function AddForm({ displayStarRating, user }) {
       rating: "",
       comment: ""
     },
-    validationSchema: yup.object().shape({
-      name: yup.string().required("Must enter a wine name").max(50),
-      type: yup.string().required("Must enter a wine type").max(25),
-      location: yup.string().required("Must enter a location").max(25),
-      flavorProfile: yup.string().required("Must enter a flavor profile").max(500),
-      price: yup.number().positive().integer().required("Must enter a price").typeError("Please enter an Integer").max(200),
-      image: yup.string().url("Must be a valid URL").max(200),
-      rating: yup.number().positive().integer().required("Must enter a wine rating").typeError("Please enter an integer").max(5),
-      comment: yup.string().required("Must enter a review comment").max(50),
-    }),
+    validationSchema: formSchema,
     onSubmit: (values) => {
      
       fetch("/wines", {

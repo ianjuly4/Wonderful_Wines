@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { MyContext } from "../MyContext";
 import Header from "../Header";
@@ -8,13 +8,18 @@ import UserError from "./UserError";
 
 function Reviews() {
   const { wineId } = useParams();
-  const { user, wines, updateWineReviews } = useContext(MyContext);
-  const [wine, setWine] = useState(null);
+  const { user, wines, setUser, fetchWines } = useContext(MyContext);
+  const { message, setMessage} = useState("")
 
-  useEffect(() => {
-    const foundWine = wines.find((wine) => wine.id === parseInt(wineId));
-    setWine(foundWine);
-  }, [wineId, wines]);
+  const wine = wines.find((wine) => wine.id === parseInt(wineId));
+
+  if (!wine) {
+    return <div>Wine not found</div>; 
+  }
+ 
+  const userReview = user.reviews?.find((review) => review.wine.id === wine.id);
+
+  console.log(userReview)
 
   const displayStarRating = (rating) => {
     if (typeof rating !== "number") {
@@ -33,16 +38,6 @@ function Reviews() {
   };
 
   const defaultImage = "https://www.winespectrum.com/wp-content/uploads/2024/12/A1662-1.png";
-
-  if (!wine) {
-    return <div>Loading wine details...</div>;
-  }
-
-  const userReview = wine.reviews?.find((review) => review.user.id === user?.id);
-
-  const handleReviewUpdate = (updatedReview) => {
-    updateWineReviews(wineId, updatedReview);
-  };
 
   return (
     <div>
@@ -80,13 +75,13 @@ function Reviews() {
                   wineId={wineId} 
                   displayStarRating={displayStarRating} 
                   userReview={userReview} 
-                  handleReviewUpdate={handleReviewUpdate} 
+                  user={user} 
+                  wine={wine}
+                  setUser={setUser}
+                  fetchWines={fetchWines}
                 />
               ) : (
-                <AddReview 
-                  wineId={wineId} 
-                  handleReviewUpdate={handleReviewUpdate} 
-                />
+                <AddReview wineId={wineId} />
               )}
             </div>
           </div>

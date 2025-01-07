@@ -1,101 +1,95 @@
-import React, { useContext, useState } from "react";
-import { MyContext } from "../MyContext"; 
+import React, {useState } from "react";
+
 import { useFormik } from "formik";
 import * as yup from "yup";
-import DeleteReview from "./DeleteReview"; 
 
-function UserReviews({ wineId, displayStarRating, userReview, handleReviewUpdate }) {
-  const { user, wines, fetchWines, updateWineReviewInState } = useContext(MyContext); 
-  const [message, setMessage] = useState("");
 
-  const wine = wines.find((wine) => wine.id === parseInt(wineId));
- 
+function UserReviews({ displayStarRating, wine, user, userReview, setUser, fetchWines}) {
+  const [message, setMessage] = useState('')
 
-  const handleDeleteReview = (reviewId) => {
-    fetch(`/reviews/${reviewId}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
+   const formSchema =
+   yup.object().shape({
+    star_review: yup.number().positive().integer().required("Must enter a wine rating").typeError("Please enter an integer").max(5),
+    comment: yup.string().required("Must enter a review comment").max(50),
+  })
+    const formik = useFormik({
+      initialValues: {
+        star_review: userReview.star_review,
+        comment: userReview.comment,
+        wine_id: wine.id,
+        user_id: user.id,
       },
-    })
-      .then((response) => {
-        if (response.ok) {
-          setMessage("Review deleted successfully!");
-          fetchWines();  
-        } else {
-          response.json().then((data) => {
-            setMessage(data.message || "An error occurred, please try again.");
+      validationSchema: formSchema,
+      onSubmit: (values) => {
+       
+        fetch(`/reviews/${userReview.id}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(values),
+        })
+          .then((result) => {
+            if (result.ok) {
+              console.log(result)
+             
+              fetchWines()
+              const updatedReviews = user.reviews.map((review) =>
+                review.id === userReview.id ? { ...review, ...values } : review
+              );
+              setUser({ ...user, reviews: updatedReviews });
+            } else {
+              result.json().then((data) => {
+                setMessage(data.message || "An error occurred, please try again.");
+              });
+            }
+          })
+          .catch((error) => {
+            setMessage("An unexpected error occurred.");
           });
-        }
-      })
-      .catch((error) => {
-        setMessage("An unexpected error occurred.");
-      });
-  };
+      },
+    });
 
-  const formik = useFormik({
-    initialValues: {
-      star_review: userReview.star_review || "",
-      comment: userReview.comment || "",
-    },
-    validationSchema: yup.object().shape({
-      star_review: yup.number().positive().integer().required("Must enter a wine rating").typeError("Please enter an integer").max(5),
-      comment: yup.string().required("Must enter a review comment").max(50),
-    }),
-    onSubmit: (values) => {
-      console.log("Submitting updated review:", values); 
-
+    const deleteReview = () => {
       fetch(`/reviews/${userReview.id}`, {
-        method: "PATCH",
+        method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          star_review: values.star_review,
-          comment: values.comment,
-        }),
       })
-      .then((result) => {
-        if (result.ok) {
-          setMessage("Review updated successfully!");
-
-       
-          const updatedReview = { ...userReview, ...values };
-
-          updateWineReviewInState(wineId, updatedReview);
-
-     
-          formik.resetForm();
+      .then((response) => {
+        if (response.ok) {
+          setMessage("Wine Review Deleted")
+          const updatedReviews = user.reviews.filter(
+            (review) => review.id !== userReview.id
+          );
+          setUser({ ...user, reviews: updatedReviews });
+          fetchWines()
         } else {
-          result.json().then((data) => {
-            setMessage(data.message || "An error occurred, please try again.");
+          response.json().then((data) => {
+            setMessage(data.message || "An error occurred while deleting the review.");
           });
         }
       })
       .catch((error) => {
-        setMessage("An unexpected error occurred.");
+        setMessage("An unexpected error occurred while deleting the review.");
       });
-    }
-  });
+  };
 
   if (!wine) {
     return <div>Wine not found!</div>;
   }
 
   return (
-    <div className="wine-detail">
       <div className="reviews">
         <h3>{message}</h3>
         <h3>{user.username}'s Review</h3>
         <div
-          key={userReview.id}
+  
           className="review flex justify-between border p-4 rounded-lg shadow-md mb-4"
         >
           {/* Left side: review content */}
           <div className="flex-1">
-            <p>
-              <strong>{userReview.user ? userReview.user.name : "Anonymous"}</strong>
-            </p>
             <h5 className={`text-lg font-semibold mb-2 ${userReview.star_review ? "text-yellow-400" : "text-black"}`}>
               {displayStarRating(userReview.star_review) || "No rating available"}
             </h5>
@@ -104,12 +98,17 @@ function UserReviews({ wineId, displayStarRating, userReview, handleReviewUpdate
 
           {/* Right side: Delete button */}
           <div className="ml-4">
-            <DeleteReview reviewId={userReview.id} onDelete={handleDeleteReview} />
+           <button 
+            onClick={() => deleteReview(userReview.id)}
+            className="mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-black"
+           >
+            DELETE
+            </button>
           </div>
         </div>
-      </div>
+     
 
-      {/* Update Review Form */}
+    {/* Update Review Form */}
       <div className="p-4 rounded shadow-lg flex flex-col gap-4">
         <div className="flex gap-8">
           <div className="flex-1 w-[40%]">
@@ -154,7 +153,7 @@ function UserReviews({ wineId, displayStarRating, userReview, handleReviewUpdate
           </div>
         </div>
       </div>
-    </div>
+      </div>
   );
 }
 

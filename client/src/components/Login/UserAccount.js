@@ -1,10 +1,9 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import UserWines from "./UserWines";
 import { NavLink } from "react-router-dom";
-
 import AllWinesFilter from "../home/AllWinesFilter";
 
-function UserAccount({ user, logout, wines }) {
+function UserAccount({ user, logout}) {
   const [wineName, setWineName] = useState("");
   const [winePrice, setWinePrice] = useState("");
   const [wineType, setWineType] = useState("");
@@ -23,22 +22,19 @@ function UserAccount({ user, logout, wines }) {
     return stars;
   };
 
- 
 
-  const usersWines = wines.filter((wine) => {
-    const hasReviewByUser = wine.reviews.some(
-      (review) => review.user_id === user.id
-    );
-    return hasReviewByUser;
-  });
+  const filteredWines = (user.reviews|| []).filter((review) => {
+   
+    const wine = review.wine || {}; 
 
-  const filteredWines = usersWines.filter((wine) => {
     const matchesPrice =
       winePrice === "All" || winePrice === "" || wine.price === parseInt(winePrice, 10);
-    const matchesType = wineType === "" || wine.type.toLowerCase().includes(wineType.toLowerCase());
-    const matchesName = wineName === "" || wine.name.toLowerCase().includes(wineName.toLowerCase());
+    const matchesType =
+      wineType === "" || wine.type?.toLowerCase().includes(wineType.toLowerCase());
+    const matchesName =
+      wineName === "" || wine.name?.toLowerCase().includes(wineName.toLowerCase());
     const matchesLocation =
-      wineLocation === "" || wine.location.toLowerCase().includes(wineLocation.toLowerCase());
+      wineLocation === "" || wine.location?.toLowerCase().includes(wineLocation.toLowerCase());
 
     return matchesPrice && matchesType && matchesName && matchesLocation;
   });
@@ -52,9 +48,7 @@ function UserAccount({ user, logout, wines }) {
         </h3>
     
         {/* Logout Button */}
-        <button onClick={() => {
-                  logout()}} 
-                  className="text-xl font-bold text-red-600 mb-6">
+        <button onClick={() => logout()} className="text-xl font-bold text-red-600 mb-6">
           Logout
         </button>
       </div>
@@ -79,12 +73,12 @@ function UserAccount({ user, logout, wines }) {
         </div>
 
         {/* Display filtered wines */}
-        <div className="wine-list grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-4"> {/* Reduced gap here */}
+        <div className="wine-list grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-4"> 
           {filteredWines.length > 0 ? (
-            filteredWines.map((wine) => (
-              <div key={wine.id} className="wine-card-container">
-                <NavLink to={`/wines/${wine.id}`} className="block">
-                  <UserWines wine={wine} displayStarRating={displayStarRating} />
+            filteredWines.map((review) => (
+              <div key={review.id} className="wine-card-container">
+                <NavLink to={`/wines/${review.wine.id}/reviews`} className="block">
+                  <UserWines review={review} wine={review.wine} displayStarRating={displayStarRating} />
                 </NavLink>
               </div>
             ))

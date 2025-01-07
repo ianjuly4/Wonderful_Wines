@@ -7,6 +7,7 @@ import { MyContext } from '../MyContext';
 function Add() {
   const { user } = useContext(MyContext);  
 
+  console.log(user)
   
   
   const displayStarRating = (rating) => {

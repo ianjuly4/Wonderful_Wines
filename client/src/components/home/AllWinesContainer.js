@@ -14,7 +14,6 @@ function AllWinesContainer({ displayStarRating, wines }) {
     return <div>Loading...</div>;
   }
 
-
   const filteredWines = wines.filter((wine) => {
     const matchesPrice =
       winePrice === "All" || winePrice === "" || wine.price === parseInt(winePrice, 10);
@@ -49,7 +48,6 @@ function AllWinesContainer({ displayStarRating, wines }) {
       <div className="wine-list grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {filteredWines.map((wine) => (
           <div key={wine.id} className="wine-card-container">
-           
             <NavLink to={`/wines/${wine.id}`} className="block">
               <AllWines wine={wine} displayStarRating={displayStarRating} />
             </NavLink>

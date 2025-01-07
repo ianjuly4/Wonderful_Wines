@@ -14,9 +14,9 @@ function App() {
         <NavBar />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/users" element={<Account />} />
-          <Route path="/wines/new" element={<Add />} />
-          <Route path="/reviews" element={<Reviews />} />
+          <Route path="/auth/login" element={<Account />} />
+          <Route path="/wines" element={<Add />} />
+          <Route path="/wines/wineId/reviews" element={<Reviews />} />
         </Routes>
       </Router>
     </MyContextProvider>

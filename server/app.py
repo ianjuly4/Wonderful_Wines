@@ -81,12 +81,8 @@ class WinesById(Resource):
 api.add_resource(WinesById, '/wines/<int:id>')
 
 class Reviews(Resource):
-    def post(self, id):
+    def post(self):
         data = request.get_json()
-        wine = Wine.query.filter(Wine.id == id).first()
-
-        if not wine:
-            return make_response({"message": "Wine not found"}, 404)
 
         user_id = session.get('user_id')
         if not user_id:
@@ -94,9 +90,9 @@ class Reviews(Resource):
 
         new_review = Review(
             user_id=user_id,
-            wine_id=wine.id,
-            comment=data.get('comment', ''),
-            star_review=data.get('star_review', '')
+            wine_id=data.get('wine_id'),
+            comment=data.get('comment'),
+            star_review=data.get('star_review')
         )
 
         db.session.add(new_review)
@@ -130,7 +126,30 @@ class Reviews(Resource):
         db.session.commit()
         return make_response(review.to_dict(), 200)
 
-api.add_resource(Reviews, '/reviews/<int:id>')
+api.add_resource(Reviews, '/reviews')
+
+class ReviewsById(Resource):
+    def delete(self, id):
+        review = Review.query.filter(Review.id == id).first()
+        if not review:
+            return make_response({"message": "Review not found"}, 404)
+        db.session.delete(review)
+        db.session.commit()
+        return make_response({"message": "Review successfully deleted"}, 200)
+
+    def patch(self, id):
+        data = request.get_json()
+        review = Review.query.filter(Review.id == id).first()
+        if not review:
+            return make_response({"message": "Review not found"}, 404)
+
+        for attr, value in data.items():
+            setattr(review, attr, value)
+
+        db.session.commit()
+        return make_response(review.to_dict(), 200)
+    
+api.add_resource(ReviewsById, '/reviews/<int:id>')
 
 class Signup(Resource):
     def post(self):
@@ -174,7 +193,7 @@ class Login(Resource):
             print(f"User found: {user.username}")
             if user.authenticate(password):
                 session['user_id'] = user.id
-                return make_response({'message': 'Login successful', 'user': user.to_dict()}, 200)
+                return make_response({'message': 'Login successful', 'user': user.to_dict(rules=('-_password_hash',))}, 200)
             else:
                 print(f"Password mismatch for user {username}")
         else:
@@ -197,7 +216,7 @@ class CheckSession(Resource):
     def get(self):
         user = User.query.filter(User.id == session.get('user_id')).first()
         if user:
-            return make_response(user.to_dict(), 200)
+            return make_response(user.to_dict(rules=('-_password_hash',)), 200)
         return make_response({"message": "No user currently logged in"}, 401)
 
 api.add_resource(CheckSession, '/check_session')
