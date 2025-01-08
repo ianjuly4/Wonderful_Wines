@@ -5,7 +5,7 @@ import { MyContext } from "../MyContext";
 
 function AddReview({ wineId }) {
   const [message, setMessage] = useState('');
-  const { user, setUser } = useContext(MyContext);  
+  const { user, setUser, fetchWines } = useContext(MyContext);  
 
   const formik = useFormik({
     initialValues: {
@@ -26,13 +26,13 @@ function AddReview({ wineId }) {
           star_review: values.star_review,
           comment: values.comment,
           wine_id: wineId,
+          user_id: user.id
         }),
       })
         .then((result) => {
           if (result.ok) {
-            setMessage("Wine Review added successfully!");
-            
-            
+            setMessage("Wine Review added successfully!")
+            fetchWines()
             result.json().then((newReview) => {
               const updatedUser = {
                 ...user,
@@ -50,7 +50,7 @@ function AddReview({ wineId }) {
           setMessage("An unexpected error occurred.");
         });
 
-      formik.resetForm(); // Reset the form after submission
+      formik.resetForm();
     },
   });
 

@@ -8,8 +8,11 @@ import RenderedReviewCard from "./RenderedReviewCard";
 function WineDetail() {
   const { wineId } = useParams();
   const { wines } = useContext(MyContext); 
+  
 
+  console.log(wineId)
   const wine = wines.find((wine) => wine.id === parseInt(wineId));
+  console.log(wine.reviews)
 
   const displayStarRating = (rating) => {
     if (typeof rating !== "number") {

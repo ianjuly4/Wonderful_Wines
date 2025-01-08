@@ -1,5 +1,4 @@
 import React, {useState } from "react";
-
 import { useFormik } from "formik";
 import * as yup from "yup";
 
@@ -31,13 +30,12 @@ function UserReviews({ displayStarRating, wine, user, userReview, setUser, fetch
         })
           .then((result) => {
             if (result.ok) {
-              console.log(result)
-             
-              fetchWines()
+              console.log('postin')
               const updatedReviews = user.reviews.map((review) =>
                 review.id === userReview.id ? { ...review, ...values } : review
               );
               setUser({ ...user, reviews: updatedReviews });
+              fetchWines()
             } else {
               result.json().then((data) => {
                 setMessage(data.message || "An error occurred, please try again.");

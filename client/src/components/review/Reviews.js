@@ -11,13 +11,16 @@ function Reviews() {
   const { user, wines, setUser, fetchWines } = useContext(MyContext);
   const { message, setMessage} = useState("")
 
+  console.log(wineId)
+
   const wine = wines.find((wine) => wine.id === parseInt(wineId));
+  console.log(wine.reviews)
+
+  const userReview = user.reviews?.find((review) => review.wine.id === wine.id);
 
   if (!wine) {
     return <div>Wine not found</div>; 
   }
- 
-  const userReview = user.reviews?.find((review) => review.wine.id === wine.id);
 
   console.log(userReview)
 

@@ -50,6 +50,7 @@ function MyContextProvider({ children }) {
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log("Login")
         console.log(data);
         if (data.user) {
           setUser(data.user); 
@@ -71,6 +72,7 @@ function MyContextProvider({ children }) {
       },
     })
       .then(() => {
+        console.log("logout")
         setUser(null);
       })
       .catch((error) => {
@@ -91,7 +93,7 @@ function MyContextProvider({ children }) {
   };
   
 
-  console.log(user)
+  console.log(wines)
 
  
   return (
