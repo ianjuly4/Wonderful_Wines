@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { MyContext } from "../MyContext";
 import Header from "../Header";
@@ -9,21 +9,26 @@ import UserError from "./UserError";
 function Reviews() {
   const { wineId } = useParams();
   const { user, wines, setUser, fetchWines } = useContext(MyContext);
-  const { message, setMessage} = useState("")
+  const [message, setMessage] = useState(""); 
 
-  console.log(wineId)
+  console.log(wineId);
 
+ 
   const wine = wines.find((wine) => wine.id === parseInt(wineId));
-  console.log(wine.reviews)
-
-  const userReview = user.reviews?.find((review) => review.wine.id === wine.id);
 
   if (!wine) {
-    return <div>Wine not found</div>; 
+    return <div>....Loading Wine....</div>; 
   }
 
-  console.log(userReview)
+  
+  const wineReviews = wine.reviews || [];  
 
+ 
+  const userReview = user?.reviews?.find((review) => review.wine.id === wine.id);
+
+  console.log(userReview);
+
+  
   const displayStarRating = (rating) => {
     if (typeof rating !== "number") {
       return "No rating available";
@@ -59,9 +64,10 @@ function Reviews() {
             <h5 className="text-lg mb-4">Where to Find: {wine.location || "Unknown Location"}</h5>
             <p className="text-sm mb-6">{wine.flavor_profile || "No flavor profile available"}</p>
             
-            <h5 className={`text-lg font-semibold mb-2 ${wine.reviews && wine.reviews[0]?.star_review ? "text-yellow-400" : "text-black"}`}>
-              {wine.reviews && wine.reviews[0]?.star_review
-                ? displayStarRating(wine.reviews[0].star_review)
+            {/* Safely handle wine.reviews to avoid undefined errors */}
+            <h5 className={`text-lg font-semibold mb-2 ${wineReviews.length > 0 && wineReviews[0]?.star_review ? "text-yellow-400" : "text-black"}`}>
+              {wineReviews.length > 0 && wineReviews[0]?.star_review
+                ? displayStarRating(wineReviews[0].star_review)
                 : "No rating available"}
             </h5>
 

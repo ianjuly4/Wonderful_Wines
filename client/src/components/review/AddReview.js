@@ -26,7 +26,6 @@ function AddReview({ wineId }) {
           star_review: values.star_review,
           comment: values.comment,
           wine_id: wineId,
-          user_id: user.id
         }),
       })
         .then((result) => {

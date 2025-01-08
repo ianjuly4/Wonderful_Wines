@@ -7,12 +7,15 @@ import RenderedReviewCard from "./RenderedReviewCard";
 
 function WineDetail() {
   const { wineId } = useParams();
-  const { wines } = useContext(MyContext); 
-  
+  const { wines } = useContext(MyContext);
 
-  console.log(wineId)
+  console.log(wineId);
   const wine = wines.find((wine) => wine.id === parseInt(wineId));
-  console.log(wine.reviews)
+  
+  
+  if (wine) {
+    console.log(wine.reviews);
+  }
 
   const displayStarRating = (rating) => {
     if (typeof rating !== "number") {
@@ -29,6 +32,7 @@ function WineDetail() {
 
     return stars;
   };
+
 
   if (!wine) {
     return <div>Loading...</div>;
@@ -52,8 +56,12 @@ function WineDetail() {
             <h5 className="text-xl mb-2">{wine.type || "Unknown Type"}</h5>
             <h5 className="text-lg mb-4">Where to Find: {wine.location || "Unknown Location"}</h5>
             <p className="text-sm mb-6">{wine.flavor_profile || "No flavor profile available"}</p>
-            
-            <h5 className={`text-lg font-semibold mb-2 ${wine.reviews && wine.reviews[0]?.star_review ? "text-yellow-400" : "text-black"}`}>
+
+            <h5
+              className={`text-lg font-semibold mb-2 ${
+                wine.reviews && wine.reviews[0]?.star_review ? "text-yellow-400" : "text-black"
+              }`}
+            >
               {wine.reviews && wine.reviews[0]?.star_review
                 ? displayStarRating(wine.reviews[0].star_review)
                 : "No rating available"}
@@ -68,9 +76,11 @@ function WineDetail() {
               <NavLink to={`/wines/${wine.id}/reviews`} className="text-blue">
                 +  Add Or Update A Review For This Wine +
               </NavLink>
+
+              {/* Safely check if reviews are available */}
               {wine.reviews && wine.reviews.length > 0 ? (
                 wine.reviews.map((review) => (
-                  <RenderedReviewCard key={review.id} review={review}  />
+                  <RenderedReviewCard key={review.id} review={review} />
                 ))
               ) : (
                 <p>No reviews yet for this wine</p>

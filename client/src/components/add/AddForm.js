@@ -3,7 +3,7 @@ import * as yup from "yup";
 import { useFormik } from "formik";
 
 
-function AddForm({ displayStarRating, user }) {
+function AddForm({ displayStarRating, user, fetchWines }) {
   const [message, setMessage] = useState("");  
   const [isUserNotLoggedIn, setIsUserNotLoggedIn] = useState(false);
 
@@ -43,6 +43,7 @@ function AddForm({ displayStarRating, user }) {
           if (result.ok) {
             setMessage("Wine added successfully!");
             formik.resetForm(); 
+            fetchWines()
           } else {
             result.json().then((data) => {
               setMessage(data.message || "An error occurred, please try again.");
