@@ -1,7 +1,7 @@
 import React from "react";
 
 function UserWines({ review, displayStarRating, wine }) {
-  const { comment, star_review } = review;
+  const { star_review } = review;
   const {image, name, flavor_profile, type, price, location} = wine
 
 

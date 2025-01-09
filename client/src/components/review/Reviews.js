@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useContext} from "react";
 import { useParams } from "react-router-dom";
 import { MyContext } from "../MyContext";
 import Header from "../Header";
@@ -9,8 +9,7 @@ import UserError from "./UserError";
 function Reviews() {
   const { wineId } = useParams();
   const { user, wines, setUser, fetchWines } = useContext(MyContext);
-  const [message, setMessage] = useState(""); 
-
+ 
   console.log(wineId);
 
  
