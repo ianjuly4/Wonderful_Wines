@@ -8,7 +8,7 @@ import UserError from "./UserError";
 
 function Reviews() {
   const { wineId } = useParams();
-  const { user, wines, setUser, fetchWines } = useContext(MyContext);
+  const { user, wines, setUser, fetchWines, setWines } = useContext(MyContext);
  
   console.log(wineId);
 
@@ -86,7 +86,9 @@ function Reviews() {
                   user={user} 
                   wine={wine}
                   setUser={setUser}
-                  fetchWines={fetchWines}
+                  //fetchWines={fetchWines}
+                  setWines={setWines}
+                  wines={wines}
                 />
               ) : (
                 <AddReview wineId={wineId} />

@@ -4,7 +4,7 @@ const MyContext = createContext();
 
 function MyContextProvider({ children }) {
   const [user, setUser] = useState(null);  
-  const [wines, setWines] = useState([]);
+  const [wines, setWines] = useState([])
   
   useEffect(() => {
     fetch("/check_session")

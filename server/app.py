@@ -38,7 +38,7 @@ class Wines(Resource):
         )
         db.session.add(new_wine)
         db.session.commit()
-
+    
         new_review = Review(
             wine_id=new_wine.id,
             user_id=user_id,

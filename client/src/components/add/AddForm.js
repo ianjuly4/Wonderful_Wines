@@ -3,7 +3,7 @@ import * as yup from "yup";
 import { useFormik } from "formik";
 
 
-function AddForm({ displayStarRating, user, fetchWines }) {
+function AddForm({ displayStarRating, user, setWines, setUser, wines }) {
   const [message, setMessage] = useState("");  
   const [isUserNotLoggedIn, setIsUserNotLoggedIn] = useState(false);
 
@@ -18,43 +18,46 @@ function AddForm({ displayStarRating, user, fetchWines }) {
   rating: yup.number().positive().integer().required("Must enter a wine rating").typeError("Please enter an integer").max(5),
   comment: yup.string().required("Must enter a review comment").max(50),
 })
-  const formik = useFormik({
-    initialValues: {
-      name: "",
-      type: "",
-      location: "",
-      flavorProfile: "",
-      price: "",
-      image: "",
-      rating: "",
-      comment: ""
-    },
-    validationSchema: formSchema,
-    onSubmit: (values) => {
-     
-      fetch("/wines", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      })
-        .then((result) => {
-          if (result.ok) {
-            setMessage("Wine added successfully!");
-            formik.resetForm(); 
-            fetchWines()
-          } else {
-            result.json().then((data) => {
-              setMessage(data.message || "An error occurred, please try again.");
-            });
-          }
+const formik = useFormik({
+  initialValues: {
+    name: "",
+    type: "",
+    location: "",
+    flavorProfile: "",
+    price: "",
+    image: "",
+    rating: "",
+    comment: ""
+  },
+  validationSchema: formSchema,
+  onSubmit: (values) => {
+    fetch("/wines", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(values), 
+    })
+      .then((response) => response.json())  
+      .then((newWine) => {
+          setMessage("Wine added successfully!");
+  
+          const updatedWines = [...wines, newWine];
+          setWines(updatedWines);
+          
+          const updatedUser = {
+            ...user,
+            reviews: [...user.reviews, newWine.review], 
+          };
+          setUser(updatedUser);
+          formik.resetForm(); 
         })
-        .catch((error) => {
-          setMessage("An unexpected error occurred.");
-        });
-    },
-  });
+      .catch((error) => {
+        setMessage("An unexpected error occurred.");
+        console.error(error);  
+      });
+  }
+});
 
   
   const handleInputChange = (e) => {

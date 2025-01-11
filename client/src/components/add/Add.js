@@ -5,7 +5,7 @@ import UserError from "../review/UserError";
 import { MyContext } from '../MyContext';
 
 function Add() {
-  const { user, fetchWines } = useContext(MyContext);  
+  const { user, setUser, setWines, wines } = useContext(MyContext);  
 
   console.log(user)
   
@@ -31,7 +31,10 @@ function Add() {
       {!user ? (
         <UserError />  
       ) : (
-        <AddForm displayStarRating={displayStarRating} user={user} fetchWines={fetchWines}/>  
+        <AddForm displayStarRating={displayStarRating} user={user} 
+          setUser={setUser} 
+          setWines={setWines}
+          wines={wines}/>  
       )}
     </div>
   );

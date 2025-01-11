@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 
 
-function UserReviews({ displayStarRating, wine, user, userReview, setUser, fetchWines}) {
+function UserReviews({ displayStarRating, wine, user, userReview, setUser, setWines, wines}) {
   const [message, setMessage] = useState('')
 
    const formSchema =
@@ -15,8 +15,7 @@ function UserReviews({ displayStarRating, wine, user, userReview, setUser, fetch
       initialValues: {
         star_review: userReview.star_review,
         comment: userReview.comment,
-        wine_id: wine.id,
-        user_id: user.id,
+        wine_id: wine.id
       },
       validationSchema: formSchema,
       onSubmit: (values) => {
@@ -31,11 +30,17 @@ function UserReviews({ displayStarRating, wine, user, userReview, setUser, fetch
           .then((result) => {
             if (result.ok) {
               console.log('postin')
-              const updatedReviews = user.reviews.map((review) =>
-                review.id === userReview.id ? { ...review, ...values } : review
+              const updatedReviews = user.reviews.filter(
+                (review) => review.id !== userReview.id
               );
               setUser({ ...user, reviews: updatedReviews });
-              fetchWines()
+              const updatedWineReviews = wine.reviews.filter(
+                (review) => review.id !== userReview.id
+              );
+              const updatedWine = {...wine, reviews: updatedReviews} 
+              const updatedWines = wines.map(w => w.id === wine.id ? updatedWine : w)
+              setWines(updatedWines);
+              //fetchWines()
             } else {
               result.json().then((data) => {
                 setMessage(data.message || "An error occurred, please try again.");
@@ -62,7 +67,13 @@ function UserReviews({ displayStarRating, wine, user, userReview, setUser, fetch
             (review) => review.id !== userReview.id
           );
           setUser({ ...user, reviews: updatedReviews });
-          fetchWines()
+          const updatedWineReviews = wine.reviews.filter(
+            (review) => review.id !== userReview.id
+          );
+          const updatedWine = {...wine, reviews: updatedReviews} 
+          const updatedWines = wines.map(w => w.id === wine.id ? updatedWine : w)
+          setWines(updatedWines);
+          //fetchWines()
         } else {
           response.json().then((data) => {
             setMessage(data.message || "An error occurred while deleting the review.");
