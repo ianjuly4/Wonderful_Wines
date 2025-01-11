@@ -34,9 +34,7 @@ function UserReviews({ displayStarRating, wine, user, userReview, setUser, setWi
                 (review) => review.id !== userReview.id
               );
               setUser({ ...user, reviews: updatedReviews });
-              //const updatedWineReviews = wine.reviews.filter(
-                //(review) => review.id !== userReview.id
-              //);
+              
               const updatedWine = {...wine, reviews: updatedReviews} 
               const updatedWines = wines.map(w => w.id === wine.id ? updatedWine : w)
               setWines(updatedWines);
